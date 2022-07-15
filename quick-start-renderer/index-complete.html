@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <style>
+    .summary {
+      padding: 20px;
+      background-color: rgba(255, 255, 255, 1);
+      border-radius: 6px;
+      border-top: 5px solid darkblue;
+      border-right: 1px solid transparent;
+      border-bottom: 1px solid transparent;
+      border-left: 1px solid transparent;
+      margin: 16px auto;
+      position: relative;
+      box-shadow: 0px 0px 8px 0px rgba(150, 150, 150, 0.6078431372549019);
+      cursor: pointer;
+      max-width: 500px;
+      font-family: Arial, Helvetica, sans-serif;
+      cursor: pointer;
+    }
+
+    .summary__title {
+      font-size: 16px;
+      color: rgba(27, 27, 27, 1);
+      line-height: 1.25;
+      font-weight: 700;
+      text-align: left;
+    }
+
+    .summary__body {
+      font-size: 13px;
+      color: rgba(153, 153, 153, 1);
+      line-height: 1.4;
+      font-weight: 400;
+      text-align: left;
+    }
+
+    .summary__category {
+      font-weight: bold;
+      font-size: 12px;
+      color: rgba(186, 186, 186, 1);
+      padding: 5px 10px;
+      text-transform: uppercase;
+      overflow: hidden;
+      white-space: nowrap;
+      text-overflow: ellipsis;
+      text-align: center;
+      display: inline-block;
+      line-height: 1;
+      border: 1px solid rgba(186, 186, 186, 1);
+    }
+
+    .from__container {
+      display: flex;
+      flex-direction: row;
+      flex: 1;
+      align-items: center;
+      margin-bottom: 16px;
+    }
+
+    .from__title {
+      font-weight: 600;
+      font-size: 14px;
+      margin: 0;
+      color: rgba(27, 27, 27, 1);
+      padding-left: 12px;
+    }
+
+    .from__icon {
+      border-radius: 3px;
+      height: 60px;
+      width: 100%;
+      max-width: 60px;
+    }
+
+    .action__container {
+      margin-block-start: 16px;
+      margin-block-end: 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .btn {
+      display: block;
+      width: 100%;
+      padding: 8px;
+      border-radius: 16px;
+      cursor: pointer;
+    }
+
+    .btn__primary {
+      border: 1px solid darkblue;
+      background-color: darkblue;
+      color: white;
+    }
+
+    .btn__transparent {
+      background-color: white;
+      color: darkblue;
+      border: 1px solid darkblue;
+    }
+
+    .column-set {
+      display: flex;
+      gap: 16px;
+      flex-direction: row;
+    }
+
+    .column-set__column {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .detail {
+      border-radius: 6px;
+      padding: 20px;
+      box-shadow: 0px 0px 4px 0px rgba(150, 150, 150, 0.6078431372549019);
+    }
+
+    .detail__title {
+      font-weight: 600;
+      font-size: 14px;
+      color: rgba(27, 27, 27, 1);
+    }
+
+    .list-item > p,
+    .summary__title > p {
+      margin-block-start: 0;
+      margin-block-end: 0;
+    }
+  </style>
+
+  <script type="module">
+    import h from 'https://cdn.skypack.dev/hyperscript'
+
+    const isRootOfNotification = node => node.title != null && node.body != null
+
+    /*
+    We create an "instance" of a render so all items being rendered have access to the properties
+    at the root of the notification via a closure (https://developer.mozilla.org/en-US/docs/Web/JavaScript/Closures)
+     */
+    function createRenderer(notification, {companyCode, spaceId, userToken, submitActionCallback}) {
+      function render(node) {
+        if (isRootOfNotification(node)) {
+          return h('div.summary',
+            {id: node.id},
+            h('div.from__container',
+              h('img.from__icon', {src: notification.from.iconUrl, alt: notification.from.name}),
+              h('p.from__title', notification.from.name)
+            ),
+            render(notification.title),
+            render(notification.body),
+            h('div.summary__category', notification.category),
+            h('div.action__container',
+              notification.actions.filter(action => action.displayInSummary).map(action => render(action))
+            ),
+            notification.detail ? render(notification.detail) : undefined
+          )
+        }
+
+        switch (node.type) {
+          // Non-leaf nodes
+          // ================================================================
+          case 'Title':
+            return h('h1.summary__title', renderChildren(node))
+          case 'Body':
+            return h('div.summary__body', renderChildren(node))
+          case 'Detail':
+            return h('details.detail', h('summary.detail__title', 'Details'), renderChildren(node), h('div.action__container', notification.actions.map(action => render(action))))
+          case 'ColumnSet':
+            return h('div.column-set', renderChildren(node))
+          case 'Column':
+            return h('div.column-set__column', renderChildren(node))
+          case 'TextBlock':
+            return h('div', renderChildren(node))
+
+
+          // // Text Elements
+          // // ================================================================
+          case 'paragraph':
+            return h('p', renderChildren(node))
+          case 'list':
+            return h(node.ordered ? 'ol.list' : 'ul.list', renderChildren(node))
+          case 'listItem':
+            return h('li.list-item', renderChildren(node))
+          case 'strong':
+            return h('b', renderChildren(node))
+          case 'emphasis':
+            return h('em', renderChildren(node))
+          case 'link':
+            return h('a', {href: node.url}, renderChildren(node))
+
+          // // Leaf nodes
+          // // ================================================================
+          case 'text':
+            return node.value
+          case 'Action.Submit': {
+            let cssClass
+
+            switch (node.actionType) {
+              case 'primary':
+                cssClass = 'btn__primary'
+                break;
+            }
+
+            const submitAction = async e => {
+              e.preventDefault()
+
+              const response = await fetch(`https://${companyCode}.workgrid.com/v1/usernotifications/${notification.id}/action`, {
+                method: 'post',
+                headers: {
+                  Authorization: `Bearer ${userToken}`,
+                  'Content-Type': 'application/json',
+                  'x-workgrid-space': spaceId
+                },
+                body: JSON.stringify({
+                  type: 'Action.Submit',
+                  data: node.data
+                })
+              })
+
+              if (!response.ok) {
+                throw new Error('Request was unsuccessful')
+              }
+
+              submitActionCallback(notification.id)
+            }
+            return h(`button.btn.${cssClass}`, {onclick: submitAction}, node.title)
+          }
+          case 'Action.OpenUrl': {
+            return h(`button.btn.btn__transparent`, {
+              onclick: function (e) {
+                e.preventDefault();
+                window.open(node.url)
+              }
+            }, node.title)
+          }
+        }
+      }
+
+      function renderChildren(node) {
+        return node.children.map(node => render(node))
+      }
+
+      return node => render(node)
+    }
+
+    globalThis.createRenderer = createRenderer
+  </script>
+</head>
+<body>
+<div id="output"></div>
+
+<script type="module">
+  // Configuration
+  // ================================================================
+
+  const WORKGRID_COMPANY_CODE = '<company-code>'
+  const WORKGRID_SPACE_ID = '<space-id>'
+  const WORKGRID_USER_TOKEN = '<user-token>'
+
+  // Libraries
+  // ================================================================
+
+  import h from 'https://cdn.skypack.dev/hyperscript'
+
+  // Output
+  // ================================================================
+
+  const output = document.querySelector('#output')
+  output.append(h('p', 'Loading...'))
+
+  let notifications = await retrieveNotifications()
+
+  if (notifications?.length) {
+    output.innerHTML = ''
+    notifications.forEach(notification => {
+      const render = createRenderer(notification, {
+        companyCode: WORKGRID_COMPANY_CODE,
+        spaceId: WORKGRID_SPACE_ID,
+        userToken: WORKGRID_USER_TOKEN,
+        submitActionCallback
+      })
+      output.append(render(notification))
+    })
+  } else {
+    output.append(h('h1', 'No notifications'))
+  }
+
+  function submitActionCallback(notificationId) {
+    output.querySelector(`#${notificationId}`).remove()
+    notifications = notifications.filter(notification => notification.id !== notificationId)
+  }
+
+  async function retrieveNotifications() {
+    try {
+      const response = await fetch(`https://${WORKGRID_COMPANY_CODE}.workgrid.com/v1/toknow?orderBy=date`, {
+        method: 'get',
+        headers: {
+          Authorization: `Bearer ${WORKGRID_USER_TOKEN}`,
+          Accept: 'application/vnd.com.workgrid.ast+json;version=1',
+          'x-workgrid-space': WORKGRID_SPACE_ID
+        }
+      })
+
+      if (!response.ok) {
+        throw new Error('Request was unsuccessful')
+      }
+
+      const data = await response.json()
+
+      return data?.notifications
+    } catch (error) {
+      console.error(error)
+      output.innerHTML = ``
+      output.append(h('h1', 'Error'))
+      output.append(h('pre', error.stack))
+    }
+  }
+</script>
+</body>
+</html>
