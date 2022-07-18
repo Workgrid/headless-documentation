@@ -11,7 +11,7 @@ curl --request POST \
                 \"audience\":[
                     {
                         \"type\":\"email\",
-                        \"value\":\"steven.harrington@workgrid.com\"
+                        \"value\":\"${WORKGRID_USERNAME}\"
                     }
                 ],
                 \"version\":\"3.0\",
