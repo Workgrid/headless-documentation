@@ -1,0 +1,210 @@
+curl --request POST \
+     --url https://${WORKGRID_COMPANY_CODE}.workgrid.com/v2/jobs \
+     --header 'Content-Type: application/json' \
+     --header "Authorization: Bearer ${WORKGRID_APP_CLIENT_ACCESS_TOKEN}" \
+     --data "[
+        {
+            \"type\":\"notification.create\",
+            \"data\":
+            {
+                \"location\":\"todo\",
+                \"audience\":[
+                    {
+                        \"type\":\"email\",
+                        \"value\":\"${WORKGRID_USERNAME}\"
+                    }
+                ],
+                \"version\":\"3.0\",
+                \"localizations\":
+                {
+                    \"en-US\":
+                    {
+                        \"category\":\"Approval\",
+                        \"from\":
+                        {
+                            \"name\":\"Expense System\",
+                            \"iconUrl\":\"https:\/\/via.placeholder.com\/64x64.png\"
+                        },
+                        \"summary\":
+                        {
+                            \"title\":\"Expense Report\",
+                            \"body\":\"Travel Expense, in the amount of "\$"10.00, has been submitted by James Durgin for approval.\"
+                        },
+                        \"detail\":
+                        {
+                            \"type\":\"card\",
+                            \"body\":[
+                                {
+                                    \"type\":\"TextBlock\",
+                                    \"text\":\"Review the details of the request below:\",
+                                    \"weight\":\"lighter\",
+                                    \"size\":\"small\",
+                                    \"isSubtle\":true
+                                },
+                                {
+                                    \"type\":\"TextBlock\",
+                                    \"text\":\"Expense Report\",
+                                    \"weight\":\"bolder\",
+                                    \"size\":\"medium\",
+                                    \"wrap\":false
+                                },
+                                {
+                                    \"type\":\"FactSet\",
+                                    \"spacing\":\"medium\",
+                                    \"facts\":[
+                                        {
+                                            \"type\":\"Fact\",
+                                            \"title\":\"Submitted by:\",
+                                            \"value\":\"James Durgin\"
+                                        },
+                                        {
+                                            \"type\":\"Fact\",
+                                            \"title\":\"Expense No:\",
+                                            \"value\":\"6311AE4C09EF4A73B86D\"
+                                        },
+                                        {
+                                            \"type\":\"Fact\",
+                                            \"title\":\"Report Title:\",
+                                            \"value\":\"Travel Expense\"
+                                        },
+                                        {
+                                            \"type\":\"Fact\",
+                                            \"title\":\"Date Submitted\",
+                                            \"value\":\"31st July 2022\"
+                                        },
+                                        {
+                                            \"type\":\"Fact\",
+                                            \"title\":\"Total Expense\",
+                                            \"value\":\"\$10.00\"
+                                        }
+                                    ]
+                                },
+                                {
+                                    \"type\":\"TextBlock\",
+                                    \"text\":\"Reimbursable Expense Report Details\",
+                                    \"wrap\":false,
+                                    \"weight\":\"bolder\",
+                                    \"size\":\"medium\",
+                                    \"color\":\"dark\"
+                                },
+                                {
+                                    \"type\":\"ColumnSet\",
+                                    \"spacing\":\"medium\",
+                                    \"separator\":true,
+                                    \"columns\":[
+                                        {
+                                            \"type\":\"Column\",
+                                            \"width\":1,
+                                            \"items\":[
+                                                {
+                                                    \"type\":\"TextBlock\",
+                                                    \"text\":\"Date\",
+                                                    \"isSubtle\":true,
+                                                    \"weight\":\"default\",
+                                                    \"color\":\"dark\",
+                                                    \"size\":\"small\"
+                                                },
+                                                {
+                                                    \"type\":\"TextBlock\",
+                                                    \"text\":\"31st July 2022\",
+                                                    \"isSubtle\":true,
+                                                    \"weight\":\"default\",
+                                                    \"color\":\"dark\",
+                                                    \"size\":\"small\"
+                                                }
+                                            ]
+                                        },
+                                        {
+                                            \"type\":\"Column\",
+                                            \"width\":1,
+                                            \"items\":[
+                                                {
+                                                    \"type\":\"TextBlock\",
+                                                    \"text\":\"Type\",
+                                                    \"isSubtle\":true,
+                                                    \"weight\":\"default\",
+                                                    \"color\":\"dark\",
+                                                    \"size\":\"small\"
+                                                },
+                                                {
+                                                    \"type\":\"TextBlock\",
+                                                    \"text\":\"Travel - Bus Fares\",
+                                                    \"isSubtle\":true,
+                                                    \"weight\":\"default\",
+                                                    \"color\":\"dark\",
+                                                    \"size\":\"small\"
+                                                }
+                                            ]
+                                        },
+                                        {
+                                            \"type\":\"Column\",
+                                            \"width\":1,
+                                            \"items\":[
+                                                {
+                                                    \"type\":\"TextBlock\",
+                                                    \"text\":\"Amount\",
+                                                    \"isSubtle\":true,
+                                                    \"weight\":\"default\",
+                                                    \"color\":\"dark\",
+                                                    \"size\":\"small\"
+                                                },
+                                                {
+                                                    \"type\":\"TextBlock\",
+                                                    \"text\":\"\$10.00\",
+                                                    \"isSubtle\":true,
+                                                    \"weight\":\"default\",
+                                                    \"color\":\"dark\",
+                                                    \"size\":\"small\"
+                                                }
+                                            ]
+                                        }
+                                    ]
+                                },
+                                {
+                                    \"type\":\"TextBlock\",
+                                    \"text\":\"Most Recent Comment:\",
+                                    \"wrap\":false,
+                                    \"weight\":\"bolder\",
+                                    \"size\":\"default\",
+                                    \"color\":\"dark\",
+                                    \"spacing\":\"large\"
+                                },
+                                {
+                                    \"type\":\"TextBlock\",
+                                    \"text\":\"Bus fare for Boston meeting\",
+                                    \"spacing\":\"none\"
+                                },
+                                {
+                                    \"type\":\"TextBlock\",
+                                    \"text\":\"[View full request in Expense System](https:\/\/www.google.com)\",
+                                    \"wrap\":false,
+                                    \"weight\":\"default\",
+                                    \"size\":\"default\",
+                                    \"color\":\"link\",
+                                    \"spacing\":\"large\"
+                                }
+                            ]
+                        },
+                        \"actions\":[
+                            {
+                                \"type\":\"Action.Submit\",
+                                \"data\": {
+                                    \"action\":\"Reject\"
+                                },
+                                \"actionType\":\"secondary\",
+                                \"title\":\"Return\"
+                            },
+                            {
+                                \"type\":\"Action.Submit\",
+                                \"data\":{
+                                    \"action\":\"Approve\"
+                                },
+                                \"actionType\":\"primary\",
+                                \"title\":\"Approve\"
+                            }
+                        ]
+                    }
+                }
+            }
+        }
+    ]"
