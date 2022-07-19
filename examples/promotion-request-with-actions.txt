@@ -22,13 +22,13 @@ curl --request POST \
                         \"category\":\"Approval\",
                         \"from\":
                         {
-                            \"name\":\"Chrome River\",
+                            \"name\":\"Oracle HCM\",
                             \"iconUrl\":\"https:\/\/via.placeholder.com\/64x64.png\"
                         },
                         \"summary\":
                         {
-                            \"title\":\"Expense Report\",
-                            \"body\":\"Travel Expense, in the amount of "\$"10.00, has been submitted by James Durgin for approval.\"
+                            \"title\":\"Promotion Request\",
+                            \"body\":\"Promotion for James Durgin, 7676759, has been submitted by Natasha Ingraham for approval.\"
                         },
                         \"detail\":
                         {
@@ -43,7 +43,7 @@ curl --request POST \
                                 },
                                 {
                                     \"type\":\"TextBlock\",
-                                    \"text\":\"Expense Report\",
+                                    \"text\":\"Promotion Request\",
                                     \"weight\":\"bolder\",
                                     \"size\":\"medium\",
                                     \"wrap\":false
@@ -55,17 +55,7 @@ curl --request POST \
                                         {
                                             \"type\":\"Fact\",
                                             \"title\":\"Submitted by:\",
-                                            \"value\":\"James Durgin\"
-                                        },
-                                        {
-                                            \"type\":\"Fact\",
-                                            \"title\":\"Expense No:\",
-                                            \"value\":\"6311AE4C09EF4A73B86D\"
-                                        },
-                                        {
-                                            \"type\":\"Fact\",
-                                            \"title\":\"Report Title:\",
-                                            \"value\":\"Travel Expense\"
+                                            \"value\":\"Natasha Ingraham\"
                                         },
                                         {
                                             \"type\":\"Fact\",
@@ -74,14 +64,19 @@ curl --request POST \
                                         },
                                         {
                                             \"type\":\"Fact\",
-                                            \"title\":\"Total Expense\",
-                                            \"value\":\"\$10.00\"
+                                            \"title\":\"Effective Start Date:\",
+                                            \"value\":\"1st August 2022\"
+                                        },
+                                        {
+                                            \"type\":\"Fact\",
+                                            \"title\":\"Salary Change Indicator:\",
+                                            \"value\":\"Yes\"
                                         }
                                     ]
                                 },
                                 {
                                     \"type\":\"TextBlock\",
-                                    \"text\":\"Reimbursable Expense Report Details\",
+                                    \"text\":\"Promotion Request Details\",
                                     \"wrap\":false,
                                     \"weight\":\"bolder\",
                                     \"size\":\"medium\",
@@ -98,15 +93,7 @@ curl --request POST \
                                             \"items\":[
                                                 {
                                                     \"type\":\"TextBlock\",
-                                                    \"text\":\"Date\",
-                                                    \"isSubtle\":true,
-                                                    \"weight\":\"default\",
-                                                    \"color\":\"dark\",
-                                                    \"size\":\"small\"
-                                                },
-                                                {
-                                                    \"type\":\"TextBlock\",
-                                                    \"text\":\"31st July 2022\",
+                                                    \"text\":\"Description\",
                                                     \"isSubtle\":true,
                                                     \"weight\":\"default\",
                                                     \"color\":\"dark\",
@@ -120,15 +107,7 @@ curl --request POST \
                                             \"items\":[
                                                 {
                                                     \"type\":\"TextBlock\",
-                                                    \"text\":\"Type\",
-                                                    \"isSubtle\":true,
-                                                    \"weight\":\"default\",
-                                                    \"color\":\"dark\",
-                                                    \"size\":\"small\"
-                                                },
-                                                {
-                                                    \"type\":\"TextBlock\",
-                                                    \"text\":\"Travel - Bus Fares\",
+                                                    \"text\":\"Current\",
                                                     \"isSubtle\":true,
                                                     \"weight\":\"default\",
                                                     \"color\":\"dark\",
@@ -142,46 +121,113 @@ curl --request POST \
                                             \"items\":[
                                                 {
                                                     \"type\":\"TextBlock\",
-                                                    \"text\":\"Amount\",
+                                                    \"text\":\"Proposed\",
                                                     \"isSubtle\":true,
                                                     \"weight\":\"default\",
                                                     \"color\":\"dark\",
                                                     \"size\":\"small\"
-                                                },
-                                                {
-                                                    \"type\":\"TextBlock\",
-                                                    \"text\":\"\$10.00\",
-                                                    \"isSubtle\":true,
-                                                    \"weight\":\"default\",
-                                                    \"color\":\"dark\",
-                                                    \"size\":\"small\"
-                                                }
+                                                } 
                                             ]
                                         }
                                     ]
                                 },
                                 {
-                                    \"type\":\"TextBlock\",
-                                    \"text\":\"Most Recent Comment:\",
-                                    \"wrap\":false,
-                                    \"weight\":\"bolder\",
-                                    \"size\":\"default\",
-                                    \"color\":\"dark\",
-                                    \"spacing\":\"large\"
+                                    \"type\":\"ColumnSet\",
+                                    \"spacing\":\"medium\",
+                                    \"separator\":true,
+                                    \"columns\":[
+                                        {
+                                            \"type\":\"Column\",
+                                            \"width\":1,
+                                            \"items\":[
+                                                {
+                                                    \"type\":\"TextBlock\",
+                                                    \"text\":\"Grade\",
+                                                    \"isSubtle\":true,
+                                                    \"weight\":\"default\",
+                                                    \"color\":\"dark\",
+                                                    \"size\":\"small\"
+                                                }
+                                            ]
+                                        },
+                                        {
+                                            \"type\":\"Column\",
+                                            \"width\":1,
+                                            \"items\":[
+                                                {
+                                                    \"type\":\"TextBlock\",
+                                                    \"text\":\"09.1.C\",
+                                                    \"isSubtle\":true,
+                                                    \"weight\":\"default\",
+                                                    \"color\":\"dark\",
+                                                    \"size\":\"small\"
+                                                }
+                                            ]
+                                        },
+                                        {
+                                            \"type\":\"Column\",
+                                            \"width\":1,
+                                            \"items\":[
+                                                {
+                                                    \"type\":\"TextBlock\",
+                                                    \"text\":\"10.1.C\",
+                                                    \"isSubtle\":true,
+                                                    \"weight\":\"default\",
+                                                    \"color\":\"dark\",
+                                                    \"size\":\"small\"
+                                                } 
+                                            ]
+                                        }
+                                    ]
                                 },
                                 {
-                                    \"type\":\"TextBlock\",
-                                    \"text\":\"Bus fare for Boston meeting\",
-                                    \"spacing\":\"none\"
-                                },
-                                {
-                                    \"type\":\"TextBlock\",
-                                    \"text\":\"[View full request in Expense System](https:\/\/www.google.com)\",
-                                    \"wrap\":false,
-                                    \"weight\":\"default\",
-                                    \"size\":\"default\",
-                                    \"color\":\"link\",
-                                    \"spacing\":\"large\"
+                                    \"type\":\"ColumnSet\",
+                                    \"spacing\":\"medium\",
+                                    \"separator\":true,
+                                    \"columns\":[
+                                        {
+                                            \"type\":\"Column\",
+                                            \"width\":1,
+                                            \"items\":[
+                                                {
+                                                    \"type\":\"TextBlock\",
+                                                    \"text\":\"Job Name\",
+                                                    \"isSubtle\":true,
+                                                    \"weight\":\"default\",
+                                                    \"color\":\"dark\",
+                                                    \"size\":\"small\"
+                                                }
+                                            ]
+                                        },
+                                        {
+                                            \"type\":\"Column\",
+                                            \"width\":1,
+                                            \"items\":[
+                                                {
+                                                    \"type\":\"TextBlock\",
+                                                    \"text\":\"HRSC Assoc, Intake/Triage\",
+                                                    \"isSubtle\":true,
+                                                    \"weight\":\"default\",
+                                                    \"color\":\"dark\",
+                                                    \"size\":\"small\"
+                                                }
+                                            ]
+                                        },
+                                        {
+                                            \"type\":\"Column\",
+                                            \"width\":1,
+                                            \"items\":[
+                                                {
+                                                    \"type\":\"TextBlock\",
+                                                    \"text\":\"HRSC Sr Assoc, Intake/Triage\",
+                                                    \"isSubtle\":true,
+                                                    \"weight\":\"default\",
+                                                    \"color\":\"dark\",
+                                                    \"size\":\"small\"
+                                                } 
+                                            ]
+                                        }
+                                    ]
                                 }
                             ]
                         },

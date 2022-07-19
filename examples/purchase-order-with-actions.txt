@@ -22,13 +22,13 @@ curl --request POST \
                         \"category\":\"Approval\",
                         \"from\":
                         {
-                            \"name\":\"Purchasing System\",
+                            \"name\":\"Service Now\",
                             \"iconUrl\":\"https:\/\/via.placeholder.com\/64x64.png\"
                         },
                         \"summary\":
                         {
                             \"title\":\"Item Approval Request\",
-                            \"body\":\" James Durgin has submitted a new Purchasing System item request for a Samsung Galaxy S7 Edge with a cost of $600.00 that needs your review and approval\"
+                            \"body\":\" James Durgin has submitted a new Service Now item request for a Samsung Galaxy S7 Edge with a cost of $600.00 that needs your review and approval\"
                         },
                         \"detail\":
                         {
