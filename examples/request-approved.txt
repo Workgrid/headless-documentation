@@ -1,0 +1,37 @@
+curl --request POST \
+     --url https://${WORKGRID_COMPANY_CODE}.workgrid.com/v2/jobs \
+     --header 'Content-Type: application/json' \
+     --header "Authorization: Bearer ${WORKGRID_APP_CLIENT_ACCESS_TOKEN}" \
+     --data "[
+        {
+            \"type\":\"notification.create\",
+            \"data\":
+            {
+                \"location\":\"toknow\",
+                \"audience\":[
+                    {
+                        \"type\":\"email\",
+                        \"value\":\"${WORKGRID_USERNAME}\"
+                    }
+                ],
+                \"version\":\"3.0\",
+                \"localizations\":
+                {
+                    \"en-US\":
+                    {
+                        \"category\":\"FYI Reminder\",
+                        \"from\":
+                        {
+                            \"name\":\"SAP Ariba\",
+                            \"iconUrl\":\"https:\/\/via.placeholder.com\/64x64.png\"
+                        },
+                        \"summary\":
+                        {
+                            \"title\":\"Request Approved\",
+                            \"body\":\"Request PR5349 for 'Apple MacBook Pro 16-inch, i7, 16 GB, 512 SSD' of amount $2,282.60 has been Approved.\"
+                        }
+                    }
+                }
+            }
+        }
+    ]"

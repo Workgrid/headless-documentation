@@ -1,0 +1,188 @@
+curl --request POST \
+     --url https://${WORKGRID_COMPANY_CODE}.workgrid.com/v2/jobs \
+     --header 'Content-Type: application/json' \
+     --header "Authorization: Bearer ${WORKGRID_APP_CLIENT_ACCESS_TOKEN}" \
+     --data "[
+        {
+            \"type\":\"notification.create\",
+            \"data\":
+            {
+                \"location\":\"toknow\",
+                \"audience\":[
+                    {
+                        \"type\":\"email\",
+                        \"value\":\"${WORKGRID_USERNAME}\"
+                    }
+                ],
+                \"version\":\"3.0\",
+                \"localizations\":
+                {
+                    \"en-US\":
+                    {
+                        \"category\":\"FYI Reminder\",
+                        \"from\":
+                        {
+                            \"name\":\"SAP Fieldglass\",
+                            \"iconUrl\":\"https:\/\/via.placeholder.com\/64x64.png\"
+                        },
+                        \"summary\":
+                        {
+                            \"title\":\"Time Sheet\",
+                            \"body\":\"LMTS00160554, in the amount of $3750.00, has been approved.\"
+                        },
+                        \"detail\":
+                        {
+                            \"type\":\"card\",
+                            \"body\":[
+                                {
+                                    \"type\":\"TextBlock\",
+                                    \"text\":\"Review the details of the request below:\",
+                                    \"weight\":\"lighter\",
+                                    \"size\":\"small\",
+                                    \"isSubtle\":true
+                                },
+                                {
+                                    \"type\":\"TextBlock\",
+                                    \"text\":\"Time Sheet\",
+                                    \"weight\":\"bolder\",
+                                    \"size\":\"medium\",
+                                    \"wrap\":false,
+                                    \"separator\":false
+                                },
+                                {
+                                    \"type\":\"ColumnSet\",
+                                    \"columns\":[
+                                        {
+                                            \"type\":\"Column\",
+                                            \"items\":[
+                                                {
+                                                    \"type\":\"TextBlock\",
+                                                    \"text\":\"Name\",
+                                                    \"weight\":\"bolder\"
+                                                },
+                                                {
+                                                    \"type\":\"TextBlock\",
+                                                    \"text\":\"Ref\",
+                                                    \"weight\":\"bolder\"
+                                                },
+                                                {
+                                                    \"type\":\"TextBlock\",
+                                                    \"text\":\"Start Date\",
+                                                    \"weight\":\"bolder\"
+                                                },
+                                                {
+                                                    \"type\":\"TextBlock\",
+                                                    \"text\":\"Amount\",
+                                                    \"weight\":\"bolder\"
+                                                }
+                                            ]
+                                        },
+                                        {
+                                            \"type\":\"Column\",
+                                            \"items\":[
+                                                {
+                                                    \"type\":\"TextBlock\",
+                                                    \"text\":\"James Durgin\"
+                                                },
+                                                {
+                                                    \"type\":\"TextBlock\",
+                                                    \"text\":\"LMTS00160554\"
+                                                },
+                                                {
+                                                    \"type\":\"TextBlock\",
+                                                    \"text\":\"7/11/2022\"
+                                                },
+                                                {
+                                                    \"type\":\"TextBlock\",
+                                                    \"text\":\"$3750.00\"
+                                                }
+                                            ]
+                                        }
+                                    ]
+                                },
+                                {
+                                    \"type\":\"TextBlock\",
+                                    \"text\":\"Hours Log\",
+                                    \"weight\":\"bolder\",
+                                    \"size\":\"medium\",
+                                    \"spacing\":\"medium\",
+                                    \"wrap\":false,
+                                    \"separator\":false
+                                },
+                                {
+                                    \"type\":\"ColumnSet\",
+                                    \"columns\":[
+                                        {
+                                            \"type\":\"Column\",
+                                            \"items\":[
+                                                {
+                                                    \"type\":\"TextBlock\",
+                                                    \"text\":\"7/11/2022\"
+                                                },
+                                                {
+                                                    \"type\":\"TextBlock\",
+                                                    \"text\":\"7/12/2022\"
+                                                },
+                                                {
+                                                    \"type\":\"TextBlock\",
+                                                    \"text\":\"7/13/2022\"
+                                                },
+                                                {
+                                                    \"type\":\"TextBlock\",
+                                                    \"text\":\"7/14/2022\"
+                                                },
+                                                {
+                                                    \"type\":\"TextBlock\",
+                                                    \"text\":\"7/15/2022\"
+                                                },
+                                                {
+                                                    \"type\":\"TextBlock\",
+                                                    \"text\":\"Total\",
+                                                    \"weight\":\"bolder\"
+                                                }
+                                            ]
+                                        },
+                                        {
+                                            \"type\":\"Column\",
+                                            \"spacing\":\"small\",
+                                            \"items\":[
+                                                {
+                                                    \"type\":\"TextBlock\",
+                                                    \"text\":\"8.0 hrs\"
+                                                },
+                                                {
+                                                    \"type\":\"TextBlock\",
+                                                    \"text\":\"9.0 hrs\"
+                                                },
+                                                {
+                                                    \"type\":\"TextBlock\",
+                                                    \"text\":\"10.0 hrs\"
+                                                },
+                                                {
+                                                    \"type\":\"TextBlock\",
+                                                    \"text\":\"8.0 hrs\"
+                                                },
+                                                {
+                                                    \"type\":\"TextBlock\",
+                                                    \"text\":\"8.0 hrs\"
+                                                },
+                                                {
+                                                    \"type\":\"TextBlock\",
+                                                    \"text\":\"43.0 hrs\",
+                                                    \"weight\":\"bolder\"
+                                                }
+                                            ]
+                                        }
+                                    ]
+                                },
+                                {
+                                    \"type\":\"TextBlock\",
+                                    \"text\":\"[View full record in SAP Fieldglass](https://www.google.com)\"
+                                }
+                            ]
+                        }
+                    }
+                }
+            }
+        }
+    ]"
