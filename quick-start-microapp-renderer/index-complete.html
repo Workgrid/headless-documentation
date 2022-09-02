@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <style>
+    .microapp-summary-container {
+      display: flex;
+      flex-direction: column;
+      width: 340px;
+    }
+
+    .microapp-detail-container {
+      margin-top: 16px;
+      margin-left: 16px;
+      height: 100vh;
+      width: 50%;
+      border: 1px solid black;
+    }
+
+    .microapp-global-container {
+      display: flex;
+      flex-direction: row;
+    }
+
+    .microapp-container {
+      margin-top: 16px;
+      border: 1px solid black;
+    }
+
+    iframe {
+      border: none;
+    }
+  </style>
+  <script type="module">
+    import h from 'https://cdn.skypack.dev/hyperscript'
+    import Courier from 'https://cdn.skypack.dev/@workgrid/courier'
+
+    async function getMicroappToken(companyCode, spaceId, userToken, payload) {
+      const response = await fetch(`https://${companyCode}.workgrid.com/v1/microapp/tokens`, {
+        method: 'post',
+        headers: {
+          Authorization: `Bearer ${userToken}`,
+          'x-workgrid-space': spaceId,
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(payload)
+      })
+
+      if (!response.ok) {
+        throw new Error('Request was unsuccessful')
+      }
+
+      const data = await response.json()
+
+      return data?.data.token
+    }
+
+    function buildSecurityOptions(microapp) {
+      return ['allow-scripts', 'allow-same-origin', ...microapp.configuration.securityOptions].join(' ')
+    }
+
+    /*
+    We create an "instance" of a render so all items being rendered have access to the properties
+    at the root of the microapp via a closure (https://developer.mozilla.org/en-US/docs/Web/JavaScript/Closures)
+     */
+    function createMicroappRenderer(summaryContainer, detailContainer, {companyCode, spaceId, userToken}) {
+      const framesBySource = new WeakMap()
+      const microappsBySource = new WeakMap()
+
+      const courier = new Courier({id: 'workgrid'})
+
+      const SUMMARY_ID_PREFIX = 'app-'
+
+      function renderMicroapp(microapp) {
+        const frame = h('iframe.microapp-container', {
+          id: `${SUMMARY_ID_PREFIX}${microapp.id}`,
+          style: 'display: none',
+          src: microapp.url,
+          sandbox: buildSecurityOptions(microapp)
+        })
+
+        summaryContainer.append(frame)
+        courier.register(frame)
+
+        framesBySource.set(frame.contentWindow, frame)
+        microappsBySource.set(frame.contentWindow, microapp)
+      }
+
+      const DETAIL_ID_PREFIX = 'app-detail-'
+
+      const isMicroappDetail = frame => frame.id.startsWith(DETAIL_ID_PREFIX)
+
+      courier.on('ready', event => {
+        const frame = framesBySource.get(event.source)
+
+        frame.style.display = 'block';
+
+        if (!isMicroappDetail(frame)) {
+          frame.style.height = `${event.data.payload.height}px`
+        }
+      })
+
+      courier.on('setSize', event => {
+        const frame = framesBySource.get(event.source)
+
+        if (!isMicroappDetail(frame)) {
+          frame.style.height = `${event.data.payload.height}px`
+        }
+      })
+
+      courier.on('refreshToken', async event => {
+        const microapp = microappsBySource.get(event.source)
+
+        return getMicroappToken(companyCode, spaceId, userToken, {...event.data.payload, appId: microapp.id});
+      })
+
+      courier.on('showDetail', event => {
+        const microapp = microappsBySource.get(event.source)
+
+        const microappDetailIsNotRendered = appId => detailContainer.querySelector(`#${DETAIL_ID_PREFIX}${appId}`) == null
+
+        if (microappDetailIsNotRendered(microapp.id)) {
+          const detailFrame = h('iframe', {
+            id: `${DETAIL_ID_PREFIX}${microapp.id}`,
+            style: 'display: none;',
+            width: '100%',
+            height: '100%',
+            src: event.data.payload.url,
+            sandbox: buildSecurityOptions(microapp)
+          })
+
+          const existingDetail = detailContainer.querySelector('iframe')
+
+          if (existingDetail) {
+            const detailFrame = framesBySource.get(existingDetail.contentWindow)
+            courier.unregister(detailFrame)
+            detailContainer.replaceChildren()
+          }
+
+          detailContainer.append(detailFrame)
+
+          courier.register(detailFrame)
+
+          framesBySource.set(detailFrame.contentWindow, detailFrame)
+          microappsBySource.set(detailFrame.contentWindow, microapp)
+        }
+      })
+
+      courier.on('hideDetail', event => {
+        const frame = framesBySource.get(event.source)
+
+        courier.unregister(frame)
+        detailContainer.replaceChildren()
+      })
+
+      courier.on('error', error => {
+        console.log('error', error)
+      })
+
+      return microapp => renderMicroapp(microapp)
+    }
+
+    globalThis.createMicroappRenderer = createMicroappRenderer
+  </script>
+</head>
+<body>
+<div id="output" class="microapp-global-container"></div>
+
+<script type="module">
+  // Configuration
+  // ================================================================
+  const WORKGRID_COMPANY_CODE = '<company-code>'
+  const WORKGRID_SPACE_ID = '<space-id>'
+  const WORKGRID_USER_TOKEN = '<user-token>'
+
+  // Libraries
+  // ================================================================
+
+  import h from 'https://cdn.skypack.dev/hyperscript'
+
+  // Output
+  // ================================================================
+
+  const output = document.querySelector('#output')
+  output.append(h('p', 'Loading...'))
+
+  let microapps = await retrieveMicroapps()
+
+  if (microapps?.length) {
+    output.innerHTML = ''
+
+    const summaryContainer = h('div.microapp-summary-container')
+    output.append(summaryContainer)
+
+    const detailContainer = h('div.microapp-detail-container', {id: 'detail-container'})
+    output.append(detailContainer)
+
+    const renderMicroapp = createMicroappRenderer(summaryContainer, detailContainer, {
+      companyCode: WORKGRID_COMPANY_CODE,
+      spaceId: WORKGRID_SPACE_ID,
+      userToken: WORKGRID_USER_TOKEN
+    })
+
+    microapps.forEach(microapp => renderMicroapp(microapp))
+  } else {
+    output.append(h('h1', 'No microapps'))
+  }
+
+
+  async function retrieveMicroapps() {
+    try {
+      const response = await fetch(`https://${WORKGRID_COMPANY_CODE}.workgrid.com/v1/microapps`, {
+        method: 'get',
+        headers: {
+          Authorization: `Bearer ${WORKGRID_USER_TOKEN}`,
+          'x-workgrid-space': WORKGRID_SPACE_ID
+        }
+      })
+
+      if (!response.ok) {
+        throw new Error('Request was unsuccessful')
+      }
+
+      const data = await response.json()
+
+      return data?.data?.apps
+    } catch (error) {
+      console.error(error)
+      output.innerHTML = ``
+      output.append(h('h1', 'Error'))
+      output.append(h('pre', error.stack))
+    }
+  }
+</script>
+</body>
+</html>
