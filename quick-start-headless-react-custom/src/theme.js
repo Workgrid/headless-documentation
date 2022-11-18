@@ -5,10 +5,6 @@ export default createTheme({
   palette: {
     primary: {
       main: purple[500]
-    },
-    secondary: {
-      // This is green.A700 as hex.
-      main: "#11cb5f"
     }
   },
   typography: {

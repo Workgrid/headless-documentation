@@ -1,4 +1,4 @@
-export default {
+const hostConfig = {
   spacing: {
     small: 3,
     default: 8,
@@ -205,3 +205,4 @@ export default {
     spacing: 8
   }
 };
+export default hostConfig
