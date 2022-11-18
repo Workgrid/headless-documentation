@@ -6,7 +6,6 @@ import { reactDomRender } from "./shared";
 export class ToggleInput extends AC.ToggleInput {
   static readonly JsonTypeName = "Input.Toggle";
 
-  // For form submission
   private _value = "false";
   public get value(): any {
     return this._value;

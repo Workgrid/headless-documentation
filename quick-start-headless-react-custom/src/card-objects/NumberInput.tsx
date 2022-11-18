@@ -6,6 +6,7 @@ import { reactDomRender } from "./shared";
 export class NumberInput extends AC.NumberInput {
   static readonly JsonTypeName = "Input.Number";
 
+  private _renderedLabel?: string;
   private _value;
   public get value(): any {
     return this._value;
@@ -18,11 +19,9 @@ export class NumberInput extends AC.NumberInput {
     return this._value ? true : false;
   }
 
-  private _renderedLabel?: string;
-
   protected handleChange(newValue) {
     this._value = newValue;
-    return this.validateValue();
+    this.validateValue();
   }
 
   // Override to hide label

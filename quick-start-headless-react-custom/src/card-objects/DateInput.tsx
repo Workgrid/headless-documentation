@@ -6,7 +6,6 @@ import { reactDomRender } from "./shared";
 export class DateInput extends AC.DateInput {
   static readonly JsonTypeName = "Input.Date";
 
-  // For form submission
   private _renderedLabel?: string;
   private _value;
   public get value(): any {
@@ -18,7 +17,7 @@ export class DateInput extends AC.DateInput {
 
   protected handleChange(newValue) {
     this._value = newValue;
-    return this.validateValue();
+    this.validateValue();
   }
 
   // Prevent AC label from displaying

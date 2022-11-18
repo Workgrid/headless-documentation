@@ -1,7 +1,6 @@
 import * as React from "react";
-import * as MuiTextField from "@mui/material/TextField";
+import MuiTextField from "@mui/material/TextField";
 import Box from "@mui/material/Box";
-import styled from "styled-components";
 
 const TextField = (props) => {
   const { size = "small", variant = "outlined", onChange } = props;
@@ -14,7 +13,7 @@ const TextField = (props) => {
 
   return (
     <Box sx={{ marginTop: "10px" }}>
-      <MuiTextField.default
+      <MuiTextField sx={{ width: '100%' }}
         {...props}
         size={size}
         variant={variant}
@@ -25,6 +24,4 @@ const TextField = (props) => {
   );
 };
 
-export default styled(TextField)`
-  width: 100%;
-`;
+export default TextField

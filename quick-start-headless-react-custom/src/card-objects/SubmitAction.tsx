@@ -1,6 +1,7 @@
 import * as React from "react";
 import * as AC from "adaptivecards";
-import SubmitButton from "../components/SubmitButton";
+import Button from "../components/Button";
+import SendIcon from "@mui/icons-material/Send";
 import { reactDomRender } from "./shared";
 
 export class SubmitAction extends AC.SubmitAction {
@@ -51,7 +52,8 @@ export class SubmitAction extends AC.SubmitAction {
 
   private renderElement = (): JSX.Element => {
     return (
-      <SubmitButton
+      <Button
+        endIcon={<SendIcon />}
         variant="contained"
         label={this.title}
         onClick={(e) => {

@@ -44,7 +44,7 @@ const Microapp = ({ node }) => {
   if (loading || networkStatus === NetworkStatus.refetch) return <Loader />;
 
   return (
-    <Card card={data.me.space.appView.view} onExecuteAction={onExecuteAction} />
+    <Card card={data.me.space.appView.view} onExecuteAction={onExecuteAction} onActionSubmit={onExecuteAction} />
   );
 };
 

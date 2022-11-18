@@ -9,7 +9,7 @@ const ThemedElement = (element: React.ReactElement) => {
 
 export const reactDomRender = (
   reactElement: React.ReactElement
-): HTMLElement | undefined => {
+): HTMLElement => {
   const div = document.createElement("div");
   const themedElement = ThemedElement(reactElement);
   ReactDOM.render(themedElement, div);

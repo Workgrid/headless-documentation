@@ -6,7 +6,7 @@ import { reactDomRender } from "./shared";
 export class ChoiceSetInput extends AC.ChoiceSetInput {
   static readonly JsonTypeName = "Input.ChoiceSet";
 
-  // For form submission
+  private _renderedLabel?: string;
   private _value = "";
   public get value(): any {
     return this._value;
@@ -15,11 +15,9 @@ export class ChoiceSetInput extends AC.ChoiceSetInput {
     return this._value ? true : false;
   }
 
-  private _renderedLabel?: string;
-
   protected handleChange(newValue) {
     this._value = newValue;
-    return this.validateValue();
+    this.validateValue();
   }
 
   // Override to hide label
@@ -37,7 +35,7 @@ export class ChoiceSetInput extends AC.ChoiceSetInput {
   }
 
   // Render internal element
-  internalRender(): HTMLElement | undefined {
+  internalRender(): HTMLElement {
     const element = reactDomRender(this.renderElement());
     element.style.width = "100%";
     return element;

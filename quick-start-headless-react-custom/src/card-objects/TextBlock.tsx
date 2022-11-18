@@ -1,3 +1,4 @@
+import * as React from "react"
 import * as AC from "adaptivecards";
 import { reactDomRender } from "./shared";
 import Typography from "@mui/material/Typography";

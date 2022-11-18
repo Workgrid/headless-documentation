@@ -2,11 +2,6 @@ import * as React from "react";
 import * as AC from "adaptivecards";
 import Button from "../components/Button";
 import { reactDomRender } from "./shared";
-import styled from "styled-components";
-
-const StyledButtom = styled(Button)`
-  width: 100%;
-`;
 
 export class ShowCardAction extends AC.ShowCardAction {
   private internalRenderedElement: any;
@@ -32,7 +27,7 @@ export class ShowCardAction extends AC.ShowCardAction {
 
   private renderElement = (): JSX.Element => {
     return (
-      <StyledButtom
+      <Button
         variant="outlined"
         label={this.getTitle()}
         onClick={() => this.execute()}

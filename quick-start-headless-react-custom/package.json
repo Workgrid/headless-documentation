@@ -17,6 +17,7 @@
     "@types/node": "^18.11.9",
     "@types/react": "^18.0.25",
     "@types/react-dom": "^18.0.9",
+    "@types/styled-components": "^5.1.26",
     "adaptivecards": "2.11.1",
     "adaptivecards-react": "1.1.1",
     "apollo-boost": "0.4.9",

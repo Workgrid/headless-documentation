@@ -4,9 +4,9 @@ import Box from "@mui/material/Box";
 import InputLabel from "@mui/material/InputLabel";
 import MenuItem from "@mui/material/MenuItem";
 import FormControl from "@mui/material/FormControl";
-import * as MuiSelect from "@mui/material/Select";
+import MuiSelect from "@mui/material/Select";
 
-export default (props) => {
+const Select = (props) => {
   const { label, size = "small", items = [], onChange, required } = props;
 
   const [value, setValue] = useState("");
@@ -31,7 +31,7 @@ export default (props) => {
             {label}
           </InputLabel>
         ) : null}
-        <MuiSelect.default
+        <MuiSelect
           {...props}
           labelId="label-id"
           size={size}
@@ -40,8 +40,9 @@ export default (props) => {
           onBlur={handleChange}
         >
           {itemsTemplate}
-        </MuiSelect.default>
+        </MuiSelect>
       </FormControl>
     </Box>
   );
 };
+export default Select

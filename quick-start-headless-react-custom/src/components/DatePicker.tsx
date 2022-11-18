@@ -3,16 +3,18 @@ import { useState } from "react";
 import TextField from "@mui/material/TextField";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
-import { DatePicker } from "@mui/x-date-pickers/DatePicker";
+import * as MuiXDatePickers from "@mui/x-date-pickers/DatePicker";
 import Box from "@mui/material/Box";
 
-export default (props) => {
+const MuiDatePicker = MuiXDatePickers.DatePicker
+
+const DatePicker =(props) => {
   const { onChange, required, label } = props;
   const [value, setValue] = useState(null);
 
   const handleNewValue = (newValue) => {
     setValue(newValue);
-    if (onChange) onChange(newValue); // Pass state info to implementer
+    if (onChange) onChange(newValue); 
   };
 
   const handleOnChange = (newValue) => {
@@ -30,7 +32,7 @@ export default (props) => {
   return (
     <Box sx={{ marginTop: "10px" }}>
       <LocalizationProvider dateAdapter={AdapterDayjs}>
-        <DatePicker
+        <MuiDatePicker
           value={value}
           onChange={handleOnChange}
           renderInput={(params) => {
@@ -50,3 +52,4 @@ export default (props) => {
     </Box>
   );
 };
+export default DatePicker

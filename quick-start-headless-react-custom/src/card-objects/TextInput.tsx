@@ -7,8 +7,6 @@ export class TextInput extends AC.TextInput {
   static readonly JsonTypeName = "Input.Text";
   private internalRenderedElement: any;
 
-  // For form submission
-  private _showErrorMessage = false;
   private _value;
   public get value(): any {
     return this._value;
@@ -23,13 +21,13 @@ export class TextInput extends AC.TextInput {
 
   protected handleChange(newValue) {
     this._value = newValue;
-    return this.isValid();
+    this.validateValue();
   }
 
   // Prevent AC label from displaying
   overrideInternalRender(): HTMLElement | undefined {
     const element = super.overrideInternalRender();
-    const label = element.querySelector("label");
+    const label = element?.querySelector("label");
     if (label) label.remove();
     return element;
   }
