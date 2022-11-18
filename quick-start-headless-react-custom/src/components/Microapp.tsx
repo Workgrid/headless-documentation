@@ -23,7 +23,7 @@ const Microapp = ({ node }) => {
     GET_MICROAPP_QUERY,
     {
       variables: {
-        spaceId: process.env.SPACE_ID,
+        spaceId: process.env.REACT_APP_SPACE_ID,
         entrypoint: node.entrypoint
       },
       notifyOnNetworkStatusChange: true

@@ -25,7 +25,7 @@ const GET_MICROAPPS_QUERY = gql`
 export default function Microapps() {
   // GraphQL Query hook to automatically fetch data
   const { data, loading, error } = useQuery(GET_MICROAPPS_QUERY, {
-    variables: { spaceId: process.env.SPACE_ID }
+    variables: { spaceId: process.env.REACT_APP_SPACE_ID }
   });
 
   // Content is not ready, show error/loader
