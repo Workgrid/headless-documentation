@@ -20,14 +20,14 @@ const cache = new InMemoryCache();
 
 // Set up Auth link to add authorization header
 const httpLink = createHttpLink({
-  uri: process.env.GRAPHQL_URI
+  uri: process.env.REACT_APP_GRAPHQL_URI
 });
 
 const authLink = setContext((_, { headers }) => {
   return {
     headers: {
       ...headers,
-      authorization: process.env.TOKEN ? `Bearer ${process.env.TOKEN}` : ""
+      authorization: process.env.REACT_APP_TOKEN ? `Bearer ${process.env.REACT_APP_TOKEN}` : ""
     }
   };
 });
