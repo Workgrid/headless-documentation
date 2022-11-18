@@ -29,7 +29,7 @@ export default function Microapps() {
   });
 
   // Content is not ready, show error/loader
-  if (loading) return <h1 class="microapp-header">Loading microapps...</h1>;
+  if (loading) return <h1 className="microapp-header">Loading microapps...</h1>;
   if (error) return <pre>{error.message}</pre>;
 
   return (
