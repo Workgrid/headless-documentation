@@ -3,7 +3,7 @@ import MuiButton from "@mui/material/Button";
 
 const Button = (props) => {
   const { label } = props;
-  return <MuiButton {...props}>{label ? label : null}</MuiButton>;
+  return <MuiButton sx={{width: '100%'}} {...props}>{label ? label : null}</MuiButton>;
 };
 
 export default Button

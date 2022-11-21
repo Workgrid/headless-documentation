@@ -3,7 +3,7 @@ import * as AC from "adaptivecards";
 import Button from "../components/Button";
 import { reactDomRender } from "./shared";
 
-export class ExecuteAction extends AC.ExecuteAction {
+export class OpenUrlAction extends AC.OpenUrlAction {
   private internalRenderedElement: any;
 
   static readonly titleProperty = new AC.StringProperty(
@@ -13,7 +13,7 @@ export class ExecuteAction extends AC.ExecuteAction {
   );
 
   getTitle(): string | undefined {
-    return this.getValue(ExecuteAction.titleProperty);
+    return this.getValue(OpenUrlAction.titleProperty);
   }
 
   get renderedElement(): HTMLElement | undefined {

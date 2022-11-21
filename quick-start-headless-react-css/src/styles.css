@@ -17,7 +17,7 @@
   max-width: 400px;
 }
 
-button.ac-pushButton {
+button.ac-pushButton, button.ac-pushButton-disabled {
   display: inline-flex;
   -webkit-box-align: center;
   align-items: center;
@@ -50,6 +50,12 @@ button.ac-pushButton {
     color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
   border: 1px solid rgba(156, 39, 176, 0.5);
   color: #9c27b0;
+}
+
+button.ac-pushButton-disabled {
+  border: 1px solid #a0a0a0;
+  color: #a0a0a0;
+  cursor: default
 }
 
 button.ac-pushButton:is(:hover) {
