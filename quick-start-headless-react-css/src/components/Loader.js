@@ -1,14 +1,3 @@
 export default () => {
-  return (
-    <div className="Card lds-roller">
-      <div></div>
-      <div></div>
-      <div></div>
-      <div></div>
-      <div></div>
-      <div></div>
-      <div></div>
-      <div></div>
-    </div>
-  );
+  return (<div class="Card lds-ring"><div></div><div></div><div></div><div></div></div>)
 };

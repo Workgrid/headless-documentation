@@ -8,13 +8,14 @@ import {
   InMemoryCache
 } from "@apollo/client";
 import { setContext } from "@apollo/client/link/context";
+
+// Uncomment to apply custom styling
 import "./styles.css";
+
 import App from "./App";
 
 // Import environment variables
 dotenv.config();
-
-// Uncomment to apply custom styling
 
 const cache = new InMemoryCache();
 
