@@ -15,7 +15,7 @@
  */
 
 import React from 'react'
-import * as ReactDOM from 'react-dom'
+import ReactDOM from 'react-dom'
 import { ThemeProvider } from '@mui/material/styles'
 import theme from '../theme'
 

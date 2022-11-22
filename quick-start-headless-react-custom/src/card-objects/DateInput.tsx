@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import * as React from 'react'
+import React from 'react'
 import * as AC from 'adaptivecards'
 import DatePicker from '../components/DatePicker'
 import { reactDomRender } from './shared'

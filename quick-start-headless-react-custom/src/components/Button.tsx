@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import * as React from 'react'
+import React from 'react'
 import MuiButton from '@mui/material/Button'
 
 const Button = (props) => {

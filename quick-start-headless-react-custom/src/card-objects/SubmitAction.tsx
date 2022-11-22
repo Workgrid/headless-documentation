@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import * as React from 'react'
+import React from 'react'
 import * as AC from 'adaptivecards'
 import Button from '../components/Button'
 import SendIcon from '@mui/icons-material/Send'

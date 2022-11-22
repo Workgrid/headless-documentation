@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import * as React from 'react'
+import React from 'react'
 import * as AC from 'adaptivecards'
 import Select from '../components/Select'
 import { reactDomRender } from './shared'
