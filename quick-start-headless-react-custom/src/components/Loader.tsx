@@ -29,6 +29,7 @@ const Loader = () => {
           width: '400px',
           padding: '5px',
           maxWidth: '400px',
+          marginTop: '15px',
         }}
       >
         <Box

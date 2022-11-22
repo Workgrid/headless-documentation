@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import React, { useEffect, useState } from 'react'
+import React from 'react'
 import { AdaptiveCardUsingHostConfigContext } from 'adaptivecards-react'
 import Paper from '@mui/material/Paper'
 import Fade from '@mui/material/Fade'
@@ -28,6 +28,7 @@ const Card = ({ card, onActionSubmit, onExecuteAction }) => {
           padding: '5px',
           width: '400px',
           maxWidth: '400px',
+          marginTop: '15px',
         }}
       >
         <AdaptiveCardUsingHostConfigContext
