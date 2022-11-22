@@ -22,7 +22,7 @@ import Fade from '@mui/material/Fade'
 
 const Loader = () => {
   return (
-    <Fade in={true}>
+    <Fade in={true} timeout={600}>
       <Paper
         elevation={3}
         sx={{

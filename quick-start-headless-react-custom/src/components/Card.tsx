@@ -21,7 +21,7 @@ import Fade from '@mui/material/Fade'
 
 const Card = ({ card, onActionSubmit, onExecuteAction }) => {
   return (
-    <Fade in={true}>
+    <Fade in={true} timeout={400}>
       <Paper
         elevation={3}
         sx={{

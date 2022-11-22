@@ -50,7 +50,6 @@ export default function Microapps() {
     variables: { spaceId: process.env.REACT_APP_SPACE_ID },
   })
 
-  // Content is not ready, show error/loader
   if (error) return <pre>{error.message}</pre>
 
   return (

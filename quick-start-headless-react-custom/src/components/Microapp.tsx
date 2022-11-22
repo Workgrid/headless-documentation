@@ -32,9 +32,10 @@ const GET_MICROAPP_QUERY = gql`
   }
 `
 
-const Microapp = React.forwardRef(({ node, key }) => {
+const Microapp = ({ node, key }) => {
   const [entrypoint, setEntrypoint] = useState(node.entrypoint)
   const [queryData, setQueryData] = useState(undefined)
+
   // GraphQL Query hook to automatically fetch data
   const { data, loading, error } = useQuery(GET_MICROAPP_QUERY, {
     variables: {
@@ -62,6 +63,6 @@ const Microapp = React.forwardRef(({ node, key }) => {
       onActionSubmit={onExecuteAction}
     />
   )
-})
+}
 
 export default Microapp
