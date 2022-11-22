@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import React from 'react'
+import * as React from 'react'
 import { useQuery, gql } from '@apollo/client'
 import Microapp from './Microapp'
 import Container from '@mui/material/Container'

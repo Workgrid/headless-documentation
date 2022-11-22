@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import React from 'react'
+import * as React from 'react'
 import * as AC from 'adaptivecards'
 import TextField from '../components/TextField'
 import { reactDomRender } from './shared'

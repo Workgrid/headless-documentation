@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import React from 'react'
+import * as React from 'react'
 import { AdaptiveCardUsingHostConfigContext } from 'adaptivecards-react'
 import Paper from '@mui/material/Paper'
 import Fade from '@mui/material/Fade'

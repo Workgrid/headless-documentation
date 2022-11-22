@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import React from 'react'
+import * as React from 'react'
 import { useState } from 'react'
 import MuiSwitch from '@mui/material/Switch'
 import FormControlLabel from '@mui/material/FormControlLabel'

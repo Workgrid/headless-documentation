@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import React from 'react'
+import * as React from 'react'
 import MuiTextField from '@mui/material/TextField'
 import Box from '@mui/material/Box'
 
