@@ -1,5 +1,5 @@
 {
-  "name": "adaptive-card-react-no-styling",
+  "name": "quick-start-headless-react-css",
   "version": "1.0.0",
   "description": "",
   "keywords": [],
@@ -13,6 +13,11 @@
     "react": "18.2.0",
     "react-dom": "18.2.0",
     "react-scripts": "4.0.0"
+  },
+  "eslintConfig": {
+    "extends": [
+      "react-app"
+    ]
   },
   "devDependencies": {
     "typescript": "4.1.3"

@@ -1,4 +1,4 @@
-# Adaptive Card React renderer
+# Adaptive Card React with CSS renderer
 
 ## Quick start
 - Run yarn to install dependencies
