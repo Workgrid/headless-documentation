@@ -54,10 +54,10 @@ export default function Microapps() {
   if (error) return <pre>{error.message}</pre>
 
   return (
-    <Container>
-      <Stack sx={{ justifyContent: 'center', alignContent: 'center', alignItems: 'center', width: '100%' }} spacing={2}>
+    <Container sx={{ justifyContent: 'center', alignContent: 'center', alignItems: 'center', width: '500px' }}>
+      <Stack spacing={2}>
         {loading ? (
-          <Box sx={{ width: '100%' }}>
+          <Box>
             <LinearProgress />
           </Box>
         ) : (

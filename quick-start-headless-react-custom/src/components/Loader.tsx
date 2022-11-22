@@ -26,9 +26,8 @@ const Loader = () => {
       <Paper
         elevation={3}
         sx={{
-          width: '400px',
           padding: '5px',
-          maxWidth: '400px',
+          maxWidth: '500px',
           marginTop: '15px',
         }}
       >

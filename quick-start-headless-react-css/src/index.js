@@ -20,7 +20,6 @@ import ReactDOM from 'react-dom'
 import { ApolloProvider, ApolloClient, createHttpLink, InMemoryCache } from '@apollo/client'
 import { setContext } from '@apollo/client/link/context'
 
-// Uncomment to apply custom styling
 import './styles.css'
 
 import App from './App'

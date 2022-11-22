@@ -26,8 +26,7 @@ const Card = ({ card, onActionSubmit, onExecuteAction }) => {
         elevation={3}
         sx={{
           padding: '5px',
-          width: '400px',
-          maxWidth: '400px',
+          maxWidth: '500px',
           marginTop: '15px',
         }}
       >
