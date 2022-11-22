@@ -1,6 +1,7 @@
 # Adaptive Card React with CSS renderer
 
 ## Quick start
+
 - Run yarn to install dependencies
 - Copy `.env.example` and rename it to `.env`
 - Populate `REACT_APP_SPACE_ID` environment variable
