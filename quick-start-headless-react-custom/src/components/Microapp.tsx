@@ -15,10 +15,9 @@
  */
 
 import React, { useState } from 'react'
-import { useQuery, gql, NetworkStatus } from '@apollo/client'
+import { useQuery, gql } from '@apollo/client'
 import Loader from './Loader'
 import Card from './Card'
-import { isEmpty } from 'lodash'
 
 // GraphQL Query for microapp content
 const GET_MICROAPP_QUERY = gql`
@@ -34,27 +33,26 @@ const GET_MICROAPP_QUERY = gql`
 `
 
 const Microapp = React.forwardRef(({ node, key }) => {
+  const [entrypoint, setEntrypoint] = useState(node.entrypoint)
+  const [queryData, setQueryData] = useState(undefined)
   // GraphQL Query hook to automatically fetch data
-  const { data, loading, error, refetch, networkStatus } = useQuery(GET_MICROAPP_QUERY, {
+  const { data, loading, error } = useQuery(GET_MICROAPP_QUERY, {
     variables: {
       spaceId: process.env.REACT_APP_SPACE_ID,
-      entrypoint: node.entrypoint,
+      entrypoint: entrypoint,
+      data: queryData,
     },
-    notifyOnNetworkStatusChange: true,
   })
 
   // Handle action for execute button
   const onExecuteAction = (e) => {
-    if (isEmpty(e.data)) {
-      refetch({ entrypoint: e.id })
-    } else {
-      refetch({ entrypoint: e.id, data: e.data })
-    }
+    setEntrypoint(e.id)
+    setQueryData(e.data)
   }
 
   // Content is not ready, show error/loader
   if (error) return <div>{error.message}</div>
-  if (loading || networkStatus === NetworkStatus.refetch) return <Loader />
+  if (loading) return <Loader />
 
   return (
     <Card

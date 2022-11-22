@@ -53,14 +53,6 @@ export default function Microapps() {
   // Content is not ready, show error/loader
   if (error) return <pre>{error.message}</pre>
 
-  // if (loading) return (
-  //   <Container>
-  //     <Stack sx={{justifyContent: 'center', alignContent: 'center', alignItems: 'center'}} spacing={2}>
-
-  //     </Stack>
-  //   </Container>
-  // )
-
   return (
     <Container>
       <Stack sx={{ justifyContent: 'center', alignContent: 'center', alignItems: 'center', width: '100%' }} spacing={2}>
