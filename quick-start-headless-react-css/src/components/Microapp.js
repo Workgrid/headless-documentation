@@ -47,8 +47,10 @@ const Microapp = ({ node }) => {
 
   // Handle action click events
   const onExecuteAction = (e) => {
-    setEntrypoint(e.id)
-    setQueryData(e.data)
+    if (e.id) {
+      setEntrypoint(e.id)
+      setQueryData(e.data)
+    }
   }
 
   // Content is not ready, show error/loader
