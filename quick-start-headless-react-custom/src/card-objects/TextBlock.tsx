@@ -19,6 +19,8 @@ import * as AC from 'adaptivecards'
 import { reactDomRender } from './shared'
 import Typography from '@mui/material/Typography'
 
+// These are the mappings from the Adaptive Card element's size to a Material UI variant
+// This helps ensure they text is sized appropriately by MUI
 const fontMappings = [
   { type: 'default', variant: 'body2' },
   { type: 'small', variant: 'body1' },
@@ -31,11 +33,13 @@ export class TextBlock extends AC.TextBlock {
   static readonly JsonTypeName = 'TextBlock'
 
   internalRender(): HTMLElement | undefined {
-    const props = fontMappings[this.size] || fontMappings[0]
+    const props = fontMappings[this.size] || fontMappings[0] // The adaptive card size is actually an index rather than the descriptor (default, small, etc)
     return reactDomRender(this.renderElement(props))
   }
 
   private renderElement = (props): JSX.Element => {
+    console.log('variant/text', { variant: props.variant, size: this.size, text: this.text })
+    // console.log('text', this.text)
     return <Typography variant={props.variant}>{this.text}</Typography>
   }
 }
