@@ -57,14 +57,7 @@ const Microapp = ({ node, key }) => {
   if (error) return <div>{error.message}</div>
   if (loading) return <Loader />
 
-  return (
-    <Card
-      key={key}
-      card={data.me.space.appView.view}
-      onExecuteAction={onExecuteAction}
-      onActionSubmit={onExecuteAction}
-    />
-  )
+  return <Card key={key} card={data.me.space.appView.view} onExecuteAction={onExecuteAction} />
 }
 
 export default Microapp

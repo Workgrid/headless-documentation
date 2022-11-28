@@ -19,7 +19,7 @@ import { AdaptiveCardUsingHostConfigContext } from 'adaptivecards-react'
 import Paper from '@mui/material/Paper'
 import Fade from '@mui/material/Fade'
 
-const Card = ({ card, onActionSubmit, onExecuteAction }) => {
+const Card = ({ card, onExecuteAction }) => {
   return (
     <Fade in={true} timeout={400}>
       <Paper
@@ -30,11 +30,7 @@ const Card = ({ card, onActionSubmit, onExecuteAction }) => {
           marginTop: '15px',
         }}
       >
-        <AdaptiveCardUsingHostConfigContext
-          payload={card}
-          onActionSubmit={onActionSubmit}
-          onExecuteAction={onExecuteAction}
-        />
+        <AdaptiveCardUsingHostConfigContext payload={card} onExecuteAction={onExecuteAction} />
       </Paper>
     </Fade>
   )
