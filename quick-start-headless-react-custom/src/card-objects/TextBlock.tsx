@@ -38,8 +38,6 @@ export class TextBlock extends AC.TextBlock {
   }
 
   private renderElement = (props): JSX.Element => {
-    console.log('variant/text', { variant: props.variant, size: this.size, text: this.text })
-    // console.log('text', this.text)
     return <Typography variant={props.variant}>{this.text}</Typography>
   }
 }
