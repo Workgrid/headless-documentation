@@ -1,5 +1,5 @@
 {
-  "name": "quick-start-headless-react-custom",
+  "name": "json-based-microapp-renderer-with-custom-components",
   "version": "1.0.0",
   "description": "",
   "keywords": [],
@@ -37,8 +37,8 @@
     ]
   },
   "scripts": {
-    "lint": "eslint --fix '**/*.{js,ts,jsx,tsx}' --ignore-path ../.gitignore",
-    "format": "prettier --write '**/*.{json,yml,md}' --ignore-path ../.gitignore",
+    "lint": "eslint --fix '**/*.{js,ts,jsx,tsx}' --ignore-path ../../../.gitignore",
+    "format": "prettier --write '**/*.{json,yml,md}' --ignore-path ../../../.gitignore",
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test --env=jsdom",
