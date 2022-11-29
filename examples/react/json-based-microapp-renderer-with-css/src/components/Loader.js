@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-export default () => {
+const Loader = () => {
   return (
     <div class="Card lds-ring">
       <div></div>
@@ -24,3 +24,4 @@ export default () => {
     </div>
   )
 }
+export default Loader

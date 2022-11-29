@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-export default {
-  '*.{js,ts,jsx,tsx}': ['eslint --fix', 'git add'],
+module.exports = {
+  '*.{js,jsx}': ['eslint --fix', 'git add'],
   '*.json': ['prettier --write', 'git add'],
 }

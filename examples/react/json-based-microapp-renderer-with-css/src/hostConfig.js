@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-export default {
+const hostConfig = {
   supportsInteractivity: true,
   spacing: {
     small: 3,
@@ -41,3 +41,5 @@ export default {
     },
   },
 }
+
+export default hostConfig
