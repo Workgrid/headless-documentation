@@ -18,13 +18,14 @@ import React, { useState } from 'react'
 import { AdaptiveCardUsingHostConfigContext } from 'adaptivecards-react'
 import { useQuery, gql } from '@apollo/client'
 import Loader from './Loader'
+import { omit } from 'lodash'
 
 // GraphQL Query for microapp content
 const GET_MICROAPP_QUERY = gql`
-  query GetMicroapp($spaceId: ID!, $entrypoint: String!, $data: JSONObject) {
+  query GetMicroapp($spaceId: ID!, $endpoint: String!, $data: JSONObject) {
     me {
       space(spaceId: $spaceId) {
-        appView(entrypoint: $entrypoint, data: $data) {
+        appView(endpoint: $endpoint, data: $data) {
           view
         }
       }
@@ -32,24 +33,26 @@ const GET_MICROAPP_QUERY = gql`
   }
 `
 
-const Microapp = ({ node }) => {
-  const [entrypoint, setEntrypoint] = useState(node.entrypoint)
-  const [queryData, setQueryData] = useState(undefined)
-
-  // GraphQL Query hook to automatically fetch and refetch data
-  const { data, loading, error } = useQuery(GET_MICROAPP_QUERY, {
-    variables: {
-      spaceId: process.env.REACT_APP_SPACE_ID,
-      entrypoint: entrypoint,
-      data: queryData,
-    },
+const Microapp = ({ node, key }) => {
+  const [queryVariables, setQueryVariables] = useState({
+    spaceId: process.env.REACT_APP_SPACE_ID,
+    endpoint: node.endpoint,
   })
 
-  // Handle action click events
+  // GraphQL Query hook to automatically fetch data
+  const { data, loading, error } = useQuery(GET_MICROAPP_QUERY, {
+    variables: queryVariables,
+  })
+
+  // Handle action for execute button
   const onExecuteAction = (e) => {
-    if (e.id) {
-      setEntrypoint(e.id)
-      setQueryData(e.data)
+    const data = e.data
+    if (data.endpoint) {
+      setQueryVariables({
+        spaceId: process.env.REACT_APP_SPACE_ID,
+        endpoint: data.endpoint,
+        data: data.data ? omit(data.data, 'endpoint') : undefined,
+      })
     }
   }
 

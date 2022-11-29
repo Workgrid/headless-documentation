@@ -93,7 +93,7 @@
 
         // Load the applicable Microapp view
         container.innerHTML = "...Loading Microapp view";
-        const microappView = await retrieveMicroappView(node.entrypoint);
+        const microappView = await retrieveMicroappView(node.endpoint);
         let adaptiveCard = createAdaptiveCardInstance();
         adaptiveCard.parse(microappView);
         // Render the card to an HTML element:
@@ -152,7 +152,7 @@
                   apps {
                     edges {
                       node {
-                        entrypoint,
+                        endpoint,
                         title
                       }
                     },
@@ -171,12 +171,12 @@
         return data.me.space.apps.edges;
       }
 
-      async function retrieveMicroappView(entrypoint, payload) {
+      async function retrieveMicroappView(endpoint, payload) {
         const query = `
-            query myAppView($spaceId: ID!, $entrypoint: String!, $data: JSONObject) {
+            query myAppView($spaceId: ID!, $endpoint: String!, $data: JSONObject) {
               me {
                 space(spaceId: $spaceId) {
-                  appView(entrypoint: $entrypoint, data: $data) {
+                  appView(endpoint: $endpoint, data: $data) {
                     view
                   }
                 }
@@ -185,7 +185,7 @@
 
         const { data } = await fetchWorkgridData(query, {
           spaceId: WORKGRID_SPACE_ID,
-          entrypoint,
+          endpoint,
           data: payload,
         });
 

@@ -35,7 +35,7 @@ const GET_MICROAPPS_QUERY = gql`
             cursor
             node {
               title
-              entrypoint
+              endpoint
             }
           }
         }
@@ -62,7 +62,7 @@ export default function Microapps() {
         ) : (
           <TransitionGroup>
             {data.me.space.apps.edges?.map((edge, idx) => (
-              <Slide key={idx}>
+              <Slide>
                 <Box>
                   <Microapp {...edge} />
                 </Box>
