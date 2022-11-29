@@ -13,3 +13,19 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
+import * as React from 'react'
+import * as ReactDOM from 'react-dom'
+import { ThemeProvider } from '@mui/material/styles'
+import theme from '../theme'
+
+const ThemedElement = (element) => {
+  return <ThemeProvider theme={theme}>{element}</ThemeProvider>
+}
+
+export const reactDomRender = (reactElement) => {
+  const div = document.createElement('div')
+  const themedElement = ThemedElement(reactElement)
+  ReactDOM.render(themedElement, div)
+  return div
+}

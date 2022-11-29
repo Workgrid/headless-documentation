@@ -19,16 +19,16 @@ import * as AC from 'adaptivecards'
 import Button from '../components/Button'
 import { reactDomRender } from './shared'
 
-export class OpenUrlAction extends AC.OpenUrlAction {
-  private internalRenderedElement: any
+export class ShowCardAction extends AC.ShowCardAction {
+  internalRenderedElement
 
-  static readonly titleProperty = new AC.StringProperty(AC.Versions.v1_0, 'title', true)
+  static titleProperty = new AC.StringProperty(AC.Versions.v1_0, 'title', true)
 
-  getTitle(): string | undefined {
-    return this.getValue(OpenUrlAction.titleProperty)
+  getTitle() {
+    return this.getValue(ShowCardAction.titleProperty)
   }
 
-  get renderedElement(): HTMLElement | undefined {
+  get renderedElement() {
     return this.internalRenderedElement
   }
 
@@ -37,9 +37,7 @@ export class OpenUrlAction extends AC.OpenUrlAction {
     this.internalRenderedElement = element
   }
 
-  private renderElement = (): JSX.Element => {
-    return (
-      <Button variant="outlined" label={this.getTitle()} disabled={!this.isEnabled} onClick={() => this.execute()} />
-    )
+  renderElement = () => {
+    return <Button variant="outlined" label={this.getTitle()} onClick={() => this.execute()} />
   }
 }

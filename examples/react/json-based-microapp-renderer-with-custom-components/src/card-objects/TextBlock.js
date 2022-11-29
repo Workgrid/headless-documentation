@@ -30,14 +30,14 @@ const fontMappings = [
 ]
 
 export class TextBlock extends AC.TextBlock {
-  static readonly JsonTypeName = 'TextBlock'
+  static JsonTypeName = 'TextBlock'
 
-  internalRender(): HTMLElement | undefined {
+  internalRender() {
     const props = fontMappings[this.size] || fontMappings[0] // The adaptive card size is actually an index rather than the descriptor (default, small, etc)
     return reactDomRender(this.renderElement(props))
   }
 
-  private renderElement = (props): JSX.Element => {
+  renderElement = (props) => {
     return <Typography variant={props.variant}>{this.text}</Typography>
   }
 }

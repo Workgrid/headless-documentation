@@ -15,17 +15,29 @@
  */
 
 import * as React from 'react'
-import * as ReactDOM from 'react-dom'
-import { ThemeProvider } from '@mui/material/styles'
-import theme from '../theme'
+import * as AC from 'adaptivecards'
+import Switch from '../components/Switch'
+import { reactDomRender } from './shared'
 
-const ThemedElement = (element: React.ReactElement) => {
-  return <ThemeProvider theme={theme}>{element}</ThemeProvider>
-}
+export class ToggleInput extends AC.ToggleInput {
+  static JsonTypeName = 'Input.Toggle'
 
-export const reactDomRender = (reactElement: React.ReactElement): HTMLElement => {
-  const div = document.createElement('div')
-  const themedElement = ThemedElement(reactElement)
-  ReactDOM.render(themedElement, div)
-  return div
+  _value = 'false'
+  get value() {
+    return this._value
+  }
+  isSet() {
+    return this._value ? true : false
+  }
+  handleChange(newValue) {
+    this._value = newValue
+  }
+
+  render() {
+    return reactDomRender(this.renderElement())
+  }
+
+  renderElement() {
+    return <Switch label={this.title} tooltip={this.label} onChange={(e) => this.handleChange(e)} />
+  }
 }

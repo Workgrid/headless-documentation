@@ -19,16 +19,16 @@ import * as AC from 'adaptivecards'
 import Button from '../components/Button'
 import { reactDomRender } from './shared'
 
-export class ShowCardAction extends AC.ShowCardAction {
-  private internalRenderedElement: any
+export class ExecuteAction extends AC.ExecuteAction {
+  internalRenderedElement
 
-  static readonly titleProperty = new AC.StringProperty(AC.Versions.v1_0, 'title', true)
+  static titleProperty = new AC.StringProperty(AC.Versions.v1_0, 'title', true)
 
-  getTitle(): string | undefined {
-    return this.getValue(ShowCardAction.titleProperty)
+  getTitle() {
+    return this.getValue(ExecuteAction.titleProperty)
   }
 
-  get renderedElement(): HTMLElement | undefined {
+  get renderedElement() {
     return this.internalRenderedElement
   }
 
@@ -37,7 +37,9 @@ export class ShowCardAction extends AC.ShowCardAction {
     this.internalRenderedElement = element
   }
 
-  private renderElement = (): JSX.Element => {
-    return <Button variant="outlined" label={this.getTitle()} onClick={() => this.execute()} />
+  renderElement = () => {
+    return (
+      <Button variant="outlined" label={this.getTitle()} disabled={!this.isEnabled} onClick={() => this.execute()} />
+    )
   }
 }

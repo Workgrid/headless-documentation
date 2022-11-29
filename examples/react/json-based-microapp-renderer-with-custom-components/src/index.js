@@ -26,8 +26,6 @@ import App from './App'
 import { ThemeProvider } from '@mui/material/styles'
 import theme from './theme'
 
-import './styles.css'
-
 // import environment variables
 dotenv.config()
 

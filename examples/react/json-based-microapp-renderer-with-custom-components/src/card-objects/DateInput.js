@@ -16,62 +16,49 @@
 
 import * as React from 'react'
 import * as AC from 'adaptivecards'
-import TextField from '../components/TextField'
+import DatePicker from '../components/DatePicker'
 import { reactDomRender } from './shared'
 
-export class NumberInput extends AC.NumberInput {
-  static readonly JsonTypeName = 'Input.Number'
+export class DateInput extends AC.DateInput {
+  static JsonTypeName = 'Input.Date'
 
-  private _renderedLabel?: string
-  private _value
-  public get value(): any {
+  _renderedLabel
+  _value
+
+  get value() {
     return this._value
   }
-  public set value(value) {
-    this._value = value
-  }
-
-  public isSet(): any {
+  isSet() {
     return this._value ? true : false
   }
 
-  protected handleChange(newValue) {
+  handleChange(newValue) {
     this._value = newValue
     this.validateValue()
   }
 
-  // Override to hide label
-  overrideInternalRender(): HTMLElement | undefined {
+  // Prevent AC label from displaying
+  overrideInternalRender() {
     this._renderedLabel = this.label
 
     // Reset the label property temporarily so that
     // overrideInternalRender doesn't render a label
     this.label = undefined
     const element = super.overrideInternalRender()
+
     // Restore the label property
     this.label = this._renderedLabel
-
     return element
   }
 
   // Render internal element
-  internalRender(): HTMLElement | undefined {
+  internalRender() {
     const element = reactDomRender(this.renderElement())
     element.style.width = '100%'
     return element
   }
 
-  private renderElement() {
-    return (
-      <TextField
-        type="number"
-        label={this._renderedLabel}
-        required={this.isRequired}
-        placeholder={this.placeholder}
-        onChange={(e) => {
-          return this.handleChange(e)
-        }}
-      />
-    )
+  renderElement() {
+    return <DatePicker label={this._renderedLabel} required={this.isRequired} onChange={(e) => this.handleChange(e)} />
   }
 }

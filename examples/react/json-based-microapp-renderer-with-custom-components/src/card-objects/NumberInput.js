@@ -16,56 +16,61 @@
 
 import * as React from 'react'
 import * as AC from 'adaptivecards'
-import Select from '../components/Select'
+import TextField from '../components/TextField'
 import { reactDomRender } from './shared'
 
-export class ChoiceSetInput extends AC.ChoiceSetInput {
-  static readonly JsonTypeName = 'Input.ChoiceSet'
+export class NumberInput extends AC.NumberInput {
+  static JsonTypeName = 'Input.Number'
 
-  private _renderedLabel?: string
-  private _value = ''
-  public get value(): any {
+  _renderedLabel
+  _value
+  get value() {
     return this._value
   }
-  public isSet(): any {
+  set value(value) {
+    this._value = value
+  }
+
+  isSet() {
     return this._value ? true : false
   }
 
-  protected handleChange(newValue) {
+  handleChange(newValue) {
     this._value = newValue
     this.validateValue()
   }
 
   // Override to hide label
-  overrideInternalRender(): HTMLElement | undefined {
+  overrideInternalRender() {
     this._renderedLabel = this.label
 
     // Reset the label property temporarily so that
     // overrideInternalRender doesn't render a label
     this.label = undefined
     const element = super.overrideInternalRender()
-
     // Restore the label property
     this.label = this._renderedLabel
+
     return element
   }
 
   // Render internal element
-  internalRender(): HTMLElement {
+  internalRender() {
     const element = reactDomRender(this.renderElement())
     element.style.width = '100%'
     return element
   }
 
-  private renderElement = (): JSX.Element => {
+  renderElement() {
     return (
-      <Select
+      <TextField
+        type="number"
         label={this._renderedLabel}
         required={this.isRequired}
+        placeholder={this.placeholder}
         onChange={(e) => {
           return this.handleChange(e)
         }}
-        items={this.choices}
       />
     )
   }

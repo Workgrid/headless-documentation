@@ -16,48 +16,60 @@
 
 import * as React from 'react'
 import * as AC from 'adaptivecards'
-import DatePicker from '../components/DatePicker'
+import TextField from '../components/TextField'
 import { reactDomRender } from './shared'
 
-export class DateInput extends AC.DateInput {
-  static readonly JsonTypeName = 'Input.Date'
+export class TextInput extends AC.TextInput {
+  static JsonTypeName = 'Input.Text'
+  internalRenderedElement
 
-  private _renderedLabel?: string
-  private _value
-  public get value(): any {
+  _value
+  get value() {
     return this._value
   }
-  public isSet(): any {
+  set value(value) {
+    this._value = value
+  }
+
+  isSet() {
     return this._value ? true : false
   }
 
-  protected handleChange(newValue) {
+  handleChange(newValue) {
     this._value = newValue
     this.validateValue()
   }
 
   // Prevent AC label from displaying
-  overrideInternalRender(): HTMLElement | undefined {
-    this._renderedLabel = this.label
-
-    // Reset the label property temporarily so that
-    // overrideInternalRender doesn't render a label
-    this.label = undefined
+  overrideInternalRender() {
     const element = super.overrideInternalRender()
-
-    // Restore the label property
-    this.label = this._renderedLabel
+    const label = element?.querySelector('label')
+    if (label) label.remove()
     return element
   }
 
-  // Render internal element
-  internalRender(): HTMLElement | undefined {
+  internalRender() {
     const element = reactDomRender(this.renderElement())
     element.style.width = '100%'
     return element
   }
 
-  private renderElement() {
-    return <DatePicker label={this._renderedLabel} required={this.isRequired} onChange={(e) => this.handleChange(e)} />
+  get renderedElement() {
+    return this.internalRenderedElement
+  }
+
+  renderElement() {
+    return (
+      <TextField
+        label={this.label}
+        required={this.isRequired}
+        placeholder={this.placeholder}
+        multiline={this.isMultiline}
+        rows={4}
+        onChange={(e) => {
+          return this.handleChange(e)
+        }}
+      />
+    )
   }
 }

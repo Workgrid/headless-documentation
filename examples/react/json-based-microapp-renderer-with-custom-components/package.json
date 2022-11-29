@@ -6,6 +6,7 @@
   "main": "src/index.js",
   "dependencies": {
     "@apollo/client": "3.7.1",
+    "@babel/eslint-parser": "^7.19.1",
     "@emotion/react": "11.10.5",
     "@emotion/styled": "11.10.5",
     "@mui/icons-material": "5.10.9",
@@ -28,8 +29,7 @@
     "react": "17.0.2",
     "react-dom": "17.0.2",
     "react-scripts": "4.0.0",
-    "react-transition-group": "^4.4.5",
-    "typescript": "4.0.5"
+    "react-transition-group": "^4.4.5"
   },
   "eslintConfig": {
     "extends": [
@@ -37,7 +37,7 @@
     ]
   },
   "scripts": {
-    "lint": "eslint --fix '**/*.{js,ts,jsx,tsx}' --ignore-path ../../../.gitignore",
+    "lint": "eslint --fix '**/*.{js,jsx}' --ignore-path ../../../.gitignore",
     "format": "prettier --write '**/*.{json,yml,md}' --ignore-path ../../../.gitignore",
     "start": "react-scripts start",
     "build": "react-scripts build",

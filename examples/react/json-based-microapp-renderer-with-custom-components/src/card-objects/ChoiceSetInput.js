@@ -16,59 +16,58 @@
 
 import * as React from 'react'
 import * as AC from 'adaptivecards'
-import TextField from '../components/TextField'
+import Select from '../components/Select'
 import { reactDomRender } from './shared'
 
-export class TextInput extends AC.TextInput {
-  static readonly JsonTypeName = 'Input.Text'
-  private internalRenderedElement: any
+export class ChoiceSetInput extends AC.ChoiceSetInput {
+  static JsonTypeName = 'Input.ChoiceSet'
 
-  private _value
-  public get value(): any {
+  _renderedLabel
+
+  _value = ''
+
+  get value() {
     return this._value
   }
-  public set value(value) {
-    this._value = value
-  }
-
-  public isSet(): any {
+  isSet() {
     return this._value ? true : false
   }
 
-  protected handleChange(newValue) {
+  handleChange(newValue) {
     this._value = newValue
     this.validateValue()
   }
 
-  // Prevent AC label from displaying
-  overrideInternalRender(): HTMLElement | undefined {
+  // Override to hide label
+  overrideInternalRender() {
+    this._renderedLabel = this.label
+
+    // Reset the label property temporarily so that
+    // overrideInternalRender doesn't render a label
+    this.label = undefined
     const element = super.overrideInternalRender()
-    const label = element?.querySelector('label')
-    if (label) label.remove()
+
+    // Restore the label property
+    this.label = this._renderedLabel
     return element
   }
 
-  internalRender(): HTMLElement | undefined {
+  // Render internal element
+  internalRender() {
     const element = reactDomRender(this.renderElement())
     element.style.width = '100%'
     return element
   }
 
-  get renderedElement(): HTMLElement {
-    return this.internalRenderedElement
-  }
-
-  private renderElement() {
+  renderElement = () => {
     return (
-      <TextField
-        label={this.label}
+      <Select
+        label={this._renderedLabel}
         required={this.isRequired}
-        placeholder={this.placeholder}
-        multiline={this.isMultiline}
-        rows={4}
         onChange={(e) => {
           return this.handleChange(e)
         }}
+        items={this.choices}
       />
     )
   }

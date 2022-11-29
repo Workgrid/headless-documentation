@@ -55,12 +55,21 @@ const Microapp = ({ node }) => {
 
   // Content is not ready, show error/loader
   if (error) return <div>{error.message}</div>
-  if (loading) return <Loader />
+  if (loading)
+    return (
+      <Loader
+        style={{
+          width: '400px',
+          boxShadow: 'rgb(0 0 0 / 25%) 0px 1px 5px 0px',
+          margin: '15px 0',
+        }}
+      />
+    )
 
   return (
     <AdaptiveCardUsingHostConfigContext
       style={{
-        maxWidth: '400px',
+        width: '400px',
         boxShadow: 'rgb(0 0 0 / 25%) 0px 1px 5px 0px',
         margin: '15px 0',
       }}

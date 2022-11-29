@@ -21,32 +21,32 @@ import SendIcon from '@mui/icons-material/Send'
 import { reactDomRender } from './shared'
 
 export class SubmitAction extends AC.SubmitAction {
-  private internalRenderedElement: any
+  internalRenderedElement
 
   // Get the properites of the action
-  static readonly textProperty = new AC.StringProperty(AC.Versions.v1_0, 'text', true)
+  static textProperty = new AC.StringProperty(AC.Versions.v1_0, 'text', true)
 
-  static readonly titleProperty = new AC.StringProperty(AC.Versions.v1_0, 'title', true)
+  static titleProperty = new AC.StringProperty(AC.Versions.v1_0, 'title', true)
 
-  static readonly dataProperty = new AC.PropertyDefinition(AC.Versions.v1_0, 'data')
+  static dataProperty = new AC.PropertyDefinition(AC.Versions.v1_0, 'data')
 
-  getTitle(): string | undefined {
+  getTitle() {
     return this.getValue(SubmitAction.titleProperty)
   }
 
-  getText(): string | undefined {
+  getText() {
     return this.getValue(SubmitAction.textProperty)
   }
 
-  getData(): string | undefined {
+  getData() {
     return this.getValue(SubmitAction.dataProperty)
   }
 
-  getInputs(): any {
+  getInputs() {
     return this.getValue(SubmitAction.associatedInputsProperty)
   }
 
-  get renderedElement(): HTMLElement | undefined {
+  get renderedElement() {
     return this.internalRenderedElement
   }
 
@@ -55,11 +55,12 @@ export class SubmitAction extends AC.SubmitAction {
     this.internalRenderedElement = element
   }
 
-  private renderElement = (): JSX.Element => {
+  renderElement = () => {
     return (
       <Button
-        endIcon={<SendIcon />}
-        variant="contained"
+        endIcon={this.associatedInputs === 'none' ? undefined : <SendIcon />}
+        variant={this.associatedInputs === 'none' ? 'outlined' : 'contained'}
+        disabled={!this.isEnabled}
         label={this.title}
         onClick={(e) => {
           e.preventDefault()
