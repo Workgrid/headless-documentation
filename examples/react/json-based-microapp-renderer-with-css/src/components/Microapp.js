@@ -36,7 +36,7 @@ const GET_MICROAPP_QUERY = gql`
 const Microapp = ({ node }) => {
   const [queryVariables, setQueryVariables] = useState({
     spaceId: process.env.REACT_APP_SPACE_ID,
-    endpoint: node.endpoint,
+    endpoint: node.entrypoint,
   })
 
   // GraphQL Query hook to automatically fetch data

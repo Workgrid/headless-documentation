@@ -29,7 +29,7 @@ const GET_MICROAPPS_QUERY = gql`
             cursor
             node {
               title
-              endpoint
+              entrypoint
             }
           }
         }
