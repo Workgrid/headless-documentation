@@ -15,13 +15,16 @@
  */
 
 import * as React from 'react'
+
 import { AdaptiveCardUsingHostConfigContext } from 'adaptivecards-react'
 
-export default function Notification({ node }) {
+export default function Notification({ node, showCardHandler }) {
   // Handle action for execute button
+
   const onExecuteAction = (e) => {
     if (e._propertyBag.type === 'Action.ShowCard') {
-      // TODO: Modal
+      const card = JSON.parse(JSON.stringify(e.card))
+      showCardHandler(card)
     }
   }
 

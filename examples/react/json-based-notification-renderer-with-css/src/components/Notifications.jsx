@@ -14,9 +14,10 @@
  * limitations under the License.
  */
 
-import React from 'react'
+import React, { useState } from 'react'
 import { useQuery, gql } from '@apollo/client'
 import Notification from './Notification'
+import Modal from './Modal'
 
 // GraphQL Query for list of notifications
 const GET_NOTIFICATIONS_QUERY = gql`
@@ -26,6 +27,7 @@ const GET_NOTIFICATIONS_QUERY = gql`
         notifications(in: $in) {
           edges {
             node {
+              id
               view
               location
             }
@@ -37,6 +39,19 @@ const GET_NOTIFICATIONS_QUERY = gql`
 `
 
 export default function Notifications() {
+  const [openModal, setOpenModal] = useState(false)
+  const [payload, setPayload] = useState(undefined)
+
+  const handleOpenModal = (cardPayload) => {
+    setOpenModal(true)
+    setPayload(cardPayload)
+  }
+
+  const handleCloseModal = () => {
+    setOpenModal(false)
+    setPayload(undefined)
+  }
+
   // GraphQL Query hook to automatically fetch data
   const { data, loading, error } = useQuery(GET_NOTIFICATIONS_QUERY, {
     variables: { spaceId: process.env.REACT_APP_SPACE_ID, in: ['TOKNOW', 'TODO'] },
@@ -48,8 +63,9 @@ export default function Notifications() {
 
   return (
     <div>
+      <Modal open={openModal} payload={payload} handleClose={handleCloseModal} />
       {data.me.space.notifications.edges?.map((edge, idx) => (
-        <Notification {...edge} />
+        <Notification key={idx} showCardHandler={handleOpenModal} {...edge} />
       ))}
     </div>
   )
