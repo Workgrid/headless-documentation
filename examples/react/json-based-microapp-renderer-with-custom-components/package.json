@@ -1,0 +1,53 @@
+{
+  "name": "json-based-microapp-renderer-with-custom-components",
+  "version": "1.0.0",
+  "description": "",
+  "keywords": [],
+  "main": "src/index.js",
+  "dependencies": {
+    "@apollo/client": "3.7.1",
+    "@babel/eslint-parser": "^7.19.1",
+    "@emotion/react": "11.10.5",
+    "@emotion/styled": "11.10.5",
+    "@mui/icons-material": "5.10.9",
+    "@mui/material": "5.10.13",
+    "@mui/x-date-pickers": "5.0.7",
+    "@types/react": "^18.0.25",
+    "@types/react-dom": "^18.0.9",
+    "adaptivecards": "2.11.1",
+    "adaptivecards-react": "1.1.1",
+    "dayjs": "1.11.6",
+    "dotenv": "16.0.3",
+    "eslint": "^7.32.0",
+    "eslint-config-prettier": "^8.3.0",
+    "eslint-plugin-header": "^3.1.1",
+    "eslint-plugin-prettier": "^3.4.0",
+    "graphql": "16.6.0",
+    "lint-staged": "^13.0.3",
+    "lodash": "4.17.21",
+    "prettier": "^2.7.1",
+    "react": "17.0.2",
+    "react-dom": "17.0.2",
+    "react-scripts": "4.0.0",
+    "react-transition-group": "^4.4.5"
+  },
+  "eslintConfig": {
+    "extends": [
+      "./eslint.config.js"
+    ]
+  },
+  "scripts": {
+    "lint": "eslint --fix '**/*.{js,jsx}' --ignore-path ../../../.gitignore",
+    "format": "prettier --write '**/*.{json,yml,md}' --ignore-path ../../../.gitignore",
+    "start": "react-scripts start",
+    "build": "react-scripts build",
+    "test": "react-scripts test --env=jsdom",
+    "eject": "react-scripts eject"
+  },
+  "browserslist": [
+    ">0.2%",
+    "not dead",
+    "not ie <= 11",
+    "not op_mini all"
+  ]
+}
