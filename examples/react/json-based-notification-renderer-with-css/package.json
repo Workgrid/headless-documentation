@@ -1,0 +1,42 @@
+{
+  "name": "json-based-notification-renderer-with-css",
+  "version": "1.0.0",
+  "description": "",
+  "keywords": [],
+  "main": "src/index.js",
+  "dependencies": {
+    "@apollo/client": "3.7.1",
+    "adaptivecards-react": "1.1.1",
+    "dotenv": "16.0.3",
+    "eslint": "^7.32.0",
+    "eslint-config-prettier": "^8.3.0",
+    "eslint-plugin-header": "^3.1.1",
+    "eslint-plugin-prettier": "^3.4.0",
+    "graphql": "16.6.0",
+    "lint-staged": "^13.0.3",
+    "lodash": "4.17.21",
+    "prettier": "^2.7.1",
+    "react": "18.2.0",
+    "react-dom": "18.2.0",
+    "react-scripts": "4.0.0"
+  },
+  "eslintConfig": {
+    "extends": [
+      "./eslint.config.js"
+    ]
+  },
+  "scripts": {
+    "lint": "eslint --fix '**/*.{js,jsx}' --ignore-path ../../../.gitignore",
+    "format": "prettier --write '**/*.{json,yml,md}' --ignore-path ../../../.gitignore",
+    "start": "react-scripts start",
+    "build": "react-scripts build",
+    "test": "react-scripts test --env=jsdom",
+    "eject": "react-scripts eject"
+  },
+  "browserslist": [
+    ">0.2%",
+    "not dead",
+    "not ie <= 11",
+    "not op_mini all"
+  ]
+}
