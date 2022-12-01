@@ -26,8 +26,8 @@ const hostConfig = {
   },
   actions: {
     maxActions: 6,
-    actionsOrientation: 'vertical',
-    actionAlignment: 'stretch',
+    actionsOrientation: 'horizontal',
+    actionAlignment: 'left',
     showCard: {
       actionMode: 'popup',
       inlineTopMargin: 20,

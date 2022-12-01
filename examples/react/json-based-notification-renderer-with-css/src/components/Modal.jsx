@@ -9,7 +9,7 @@ const modalStyle = {
     right: 'auto',
     bottom: 'auto',
     marginRight: '-50%',
-    width: '500px',
+    width: '700px',
     transform: 'translate(-50%, -50%)',
   },
 }
