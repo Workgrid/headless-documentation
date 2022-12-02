@@ -74,7 +74,9 @@ export default function Notifications() {
       <Modal open={openModal} payload={payload} handleClose={handleCloseModal} />
       <TransitionGroup>
         {data.me.space.notifications.edges?.map((edge, idx) => {
-          return <Notification key={idx} showCardHandler={handleOpenModal} {...edge} />
+          return (
+            <Notification transitionDelay={`${idx * 50}ms`} key={idx} showCardHandler={handleOpenModal} {...edge} />
+          )
         })}
       </TransitionGroup>
     </div>

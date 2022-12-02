@@ -20,7 +20,7 @@ import CardContent from '@mui/material/CardContent'
 import Grow from '@mui/material/Grow'
 import { AdaptiveCardUsingHostConfigContext } from 'adaptivecards-react'
 
-export default function Notification({ node, showCardHandler }) {
+export default function Notification({ node, showCardHandler, transitionDelay }) {
   const handleOnExecuteAction = (e) => {
     if (e._propertyBag.type === 'Action.ShowCard') {
       const card = JSON.parse(JSON.stringify(e.card))
@@ -30,7 +30,7 @@ export default function Notification({ node, showCardHandler }) {
 
   if (!node.view) return <div></div>
   return (
-    <Grow in={true} timeout={300}>
+    <Grow in={true} timeout={300} style={{ transitionDelay: transitionDelay }}>
       <Card sx={{ maxWidth: '400px', margin: '15px' }}>
         <CardContent>
           <AdaptiveCardUsingHostConfigContext payload={node.view} onExecuteAction={handleOnExecuteAction} />
