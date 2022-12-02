@@ -19,6 +19,8 @@ import { useQuery, gql } from '@apollo/client'
 import Notification from './Notification'
 import Modal from './Modal'
 import { TransitionGroup } from 'react-transition-group'
+import Box from '@mui/material/Box'
+import LinearProgress from '@mui/material/LinearProgress'
 
 // GraphQL Query for list of notifications
 const GET_NOTIFICATIONS_QUERY = gql`
@@ -59,7 +61,12 @@ export default function Notifications() {
   })
 
   // Content is not ready, show error/loader
-  if (loading) return <h1 className="notification-header">Loading notifications...</h1>
+  if (loading)
+    return (
+      <Box>
+        <LinearProgress />
+      </Box>
+    )
   if (error) return <pre>{error.message}</pre>
 
   return (
