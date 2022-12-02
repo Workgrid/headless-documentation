@@ -19,7 +19,6 @@ import { useQuery, gql } from '@apollo/client'
 import Notification from './Notification'
 import Modal from './Modal'
 import { TransitionGroup } from 'react-transition-group'
-import { delay } from 'lodash'
 
 // GraphQL Query for list of notifications
 const GET_NOTIFICATIONS_QUERY = gql`
@@ -68,7 +67,7 @@ export default function Notifications() {
       <Modal open={openModal} payload={payload} handleClose={handleCloseModal} />
       <TransitionGroup>
         {data.me.space.notifications.edges?.map((edge, idx) => {
-          return <Notification timeout={idx * 300} key={idx} showCardHandler={handleOpenModal} {...edge} />
+          return <Notification key={idx} showCardHandler={handleOpenModal} {...edge} />
         })}
       </TransitionGroup>
     </div>

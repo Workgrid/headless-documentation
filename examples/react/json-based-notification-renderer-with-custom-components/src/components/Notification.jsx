@@ -15,14 +15,13 @@
  */
 
 import * as React from 'react'
-import Card from './Card'
-
+import Card from '@mui/material/Card'
+import CardContent from '@mui/material/CardContent'
+import Grow from '@mui/material/Grow'
 import { AdaptiveCardUsingHostConfigContext } from 'adaptivecards-react'
 
-export default function Notification({ node, showCardHandler, timeout }) {
-  // Handle action for execute button
-
-  const onExecuteAction = (e) => {
+export default function Notification({ node, showCardHandler }) {
+  const handleOnExecuteAction = (e) => {
     if (e._propertyBag.type === 'Action.ShowCard') {
       const card = JSON.parse(JSON.stringify(e.card))
       showCardHandler(card)
@@ -31,8 +30,12 @@ export default function Notification({ node, showCardHandler, timeout }) {
 
   if (!node.view) return <div></div>
   return (
-    <Card timeout={timeout}>
-      <AdaptiveCardUsingHostConfigContext payload={node.view} />
-    </Card>
+    <Grow in={true} timeout={300}>
+      <Card sx={{ maxWidth: '400px', margin: '15px' }}>
+        <CardContent>
+          <AdaptiveCardUsingHostConfigContext payload={node.view} onExecuteAction={handleOnExecuteAction} />
+        </CardContent>
+      </Card>
+    </Grow>
   )
 }

@@ -1,6 +1,7 @@
 import * as React from 'react'
 import Box from '@mui/material/Box'
 import Modal from '@mui/material/Modal'
+import Button from '@mui/material/Button'
 import { AdaptiveCardUsingHostConfigContext } from 'adaptivecards-react'
 
 const style = {
@@ -25,6 +26,11 @@ const BasicModal = ({ open, handleClose, payload }) => {
       >
         <Box sx={style}>
           <AdaptiveCardUsingHostConfigContext payload={payload} />
+          <div style={{ display: 'flex', justifyContent: 'right' }}>
+            <Button variant="outlined" onClick={handleClose}>
+              Close
+            </Button>
+          </div>
         </Box>
       </Modal>
     </div>
