@@ -38,6 +38,6 @@ export class ShowCardAction extends AC.ShowCardAction {
   }
 
   renderElement = () => {
-    return <Button variant="outlined" label={this.getTitle()} onClick={() => this.execute()} />
+    return <Button label={this.getTitle()} onClick={() => this.execute()} />
   }
 }

@@ -17,7 +17,6 @@
 import * as React from 'react'
 import * as AC from 'adaptivecards'
 import Button from '../components/Button'
-import SendIcon from '@mui/icons-material/Send'
 import { reactDomRender } from './shared'
 
 export class SubmitAction extends AC.SubmitAction {
@@ -58,8 +57,8 @@ export class SubmitAction extends AC.SubmitAction {
   renderElement = () => {
     return (
       <Button
-        endIcon={this.associatedInputs === 'none' ? undefined : <SendIcon />}
-        variant={this.associatedInputs === 'none' ? 'outlined' : 'contained'}
+        color={mapToMuiColor(this.style)}
+        variant={mapToMuiVariant(this.associatedInputs)}
         disabled={!this.isEnabled}
         label={this.title}
         onClick={(e) => {
@@ -69,4 +68,18 @@ export class SubmitAction extends AC.SubmitAction {
       />
     )
   }
+}
+
+const mapToMuiVariant = (associatedInputs) => {
+  return associatedInputs === 'none' ? 'outlined' : 'contained'
+}
+
+const mapToMuiColor = (style) => {
+  if (style === 'destructive') {
+    return 'error'
+  }
+  if (style === 'positive') {
+    return 'success'
+  }
+  return undefined
 }
