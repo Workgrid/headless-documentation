@@ -14,28 +14,36 @@
  * limitations under the License.
  */
 
-import * as React from 'react'
+import React from 'react'
 import Card from '@mui/material/Card'
 import CardContent from '@mui/material/CardContent'
-import Grow from '@mui/material/Grow'
+import IconButton from '@mui/material/IconButton'
+import DeleteIcon from '@mui/icons-material/Delete'
 import { AdaptiveCardUsingHostConfigContext } from 'adaptivecards-react'
 
-export default function Notification({ node, showCardHandler, transitionDelay }) {
+export default function Notification({ node, onActionShowCardHandler, onDeleteHandler }) {
   const handleOnExecuteAction = (e) => {
     if (e._propertyBag.type === 'Action.ShowCard') {
       const card = JSON.parse(JSON.stringify(e.card))
-      showCardHandler(card)
+      onActionShowCardHandler(card)
     }
   }
 
   if (!node.view) return <div></div>
   return (
-    <Grow in={true} timeout={300} style={{ transitionDelay: transitionDelay }}>
-      <Card sx={{ maxWidth: '400px', margin: '15px' }}>
-        <CardContent>
-          <AdaptiveCardUsingHostConfigContext payload={node.view} onExecuteAction={handleOnExecuteAction} />
-        </CardContent>
-      </Card>
-    </Grow>
+    <Card sx={{ maxWidth: '400px', margin: '15px' }}>
+      <CardContent>
+        <AdaptiveCardUsingHostConfigContext payload={node.view} onExecuteAction={handleOnExecuteAction} />
+        {node.isDeletable ? (
+          <div style={{ display: 'flex', justifyContent: 'right' }}>
+            <IconButton aria-label="delete" onClick={() => onDeleteHandler(node.id)}>
+              <DeleteIcon />
+            </IconButton>
+          </div>
+        ) : (
+          <></>
+        )}
+      </CardContent>
+    </Card>
   )
 }

@@ -14,13 +14,14 @@
  * limitations under the License.
  */
 
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useQuery, gql } from '@apollo/client'
 import Notification from './Notification'
 import Modal from './Modal'
-import { TransitionGroup } from 'react-transition-group'
 import Box from '@mui/material/Box'
 import LinearProgress from '@mui/material/LinearProgress'
+import { TransitionGroup } from 'react-transition-group'
+import Grow from '@mui/material/Grow'
 
 // GraphQL Query for list of notifications
 const GET_NOTIFICATIONS_QUERY = gql`
@@ -31,6 +32,7 @@ const GET_NOTIFICATIONS_QUERY = gql`
           edges {
             node {
               id
+              isDeletable
               view
               location
             }
@@ -44,6 +46,7 @@ const GET_NOTIFICATIONS_QUERY = gql`
 export default function Notifications() {
   const [openModal, setOpenModal] = useState(false)
   const [payload, setPayload] = useState(undefined)
+  const [notifications, setNotifications] = useState([])
 
   const handleOpenModal = (cardPayload) => {
     setOpenModal(true)
@@ -55,10 +58,20 @@ export default function Notifications() {
     setPayload(undefined)
   }
 
+  const handleDelete = (id) => {
+    setNotifications(notifications.filter((notification) => notification.node.id !== id))
+  }
+
   // GraphQL Query hook to automatically fetch data
   const { data, loading, error } = useQuery(GET_NOTIFICATIONS_QUERY, {
     variables: { spaceId: process.env.REACT_APP_SPACE_ID, in: ['TOKNOW', 'TODO'] },
   })
+
+  const notificationEdges = data?.me?.space?.notifications?.edges
+
+  useEffect(() => {
+    notificationEdges && setNotifications(notificationEdges)
+  }, [notificationEdges])
 
   // Content is not ready, show error/loader
   if (loading)
@@ -73,11 +86,21 @@ export default function Notifications() {
     <div>
       <Modal open={openModal} payload={payload} handleClose={handleCloseModal} />
       <TransitionGroup>
-        {data.me.space.notifications.edges?.map((edge, idx) => {
-          return (
-            <Notification transitionDelay={`${idx * 50}ms`} key={idx} showCardHandler={handleOpenModal} {...edge} />
-          )
-        })}
+        {notifications.map((edge, idx) => (
+          <Grow
+            key={edge.node.id}
+            timeout={600}
+            style={{ transitionDelay: `${idx * 50}ms` }}
+            onExiting={(node) => {
+              node.style['transition-duration'] = '300ms'
+              node.style['transition-delay'] = '0ms'
+            }}
+          >
+            <Box sx={{ maxWidth: 400 }}>
+              <Notification node={edge.node} onActionShowCardHandler={handleOpenModal} onDeleteHandler={handleDelete} />
+            </Box>
+          </Grow>
+        ))}
       </TransitionGroup>
     </div>
   )
