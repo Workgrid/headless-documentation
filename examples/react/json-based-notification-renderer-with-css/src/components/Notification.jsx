@@ -18,25 +18,33 @@ import * as React from 'react'
 
 import { AdaptiveCardUsingHostConfigContext } from 'adaptivecards-react'
 
-export default function Notification({ node, showCardHandler }) {
-  // Handle action for execute button
-
-  const onExecuteAction = (e) => {
+export default function Notification({ node, onActionShowCardHandler, onDeleteHandler }) {
+  const handleOnExecuteAction = (e) => {
     if (e._propertyBag.type === 'Action.ShowCard') {
       const card = JSON.parse(JSON.stringify(e.card))
-      showCardHandler(card)
+      onActionShowCardHandler(card)
     }
   }
-
+  if (!node.view) return <div></div>
   return (
-    <AdaptiveCardUsingHostConfigContext
+    <div
       style={{
         width: '400px',
         boxShadow: 'rgb(0 0 0 / 25%) 0px 1px 5px 0px',
         margin: '15px 0',
+        padding: '10px',
       }}
-      payload={node.view}
-      onExecuteAction={onExecuteAction}
-    />
+    >
+      <AdaptiveCardUsingHostConfigContext payload={node.view} onExecuteAction={handleOnExecuteAction} />
+      {node.isDeletable ? (
+        <div style={{ display: 'flex', justifyContent: 'right' }}>
+          <button className="deleteButton" onClick={() => onDeleteHandler(node.id)}>
+            ✕
+          </button>
+        </div>
+      ) : (
+        <></>
+      )}
+    </div>
   )
 }

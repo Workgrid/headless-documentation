@@ -14,48 +14,24 @@
  * limitations under the License.
  */
 
-import React, { useState } from 'react'
-import { useQuery, gql } from '@apollo/client'
+import React from 'react'
 import Notification from './Notification'
 import Modal from './Modal'
-
-// GraphQL Query for list of notifications
-const GET_NOTIFICATIONS_QUERY = gql`
-  query GetNotifications($spaceId: ID!, $in: [NotificationLocation!]!) {
-    me {
-      space(spaceId: $spaceId) {
-        notifications(in: $in) {
-          edges {
-            node {
-              id
-              view
-              location
-            }
-          }
-        }
-      }
-    }
-  }
-`
+import useModal from './hooks/useModal'
+import useFetchNotifications from './hooks/useFetchNotifications'
+import useDeleteNotification from './hooks/useDeleteNotification'
 
 export default function Notifications() {
-  const [openModal, setOpenModal] = useState(false)
-  const [payload, setPayload] = useState(undefined)
+  const [payload, isOpen, handleOpenModal, handleCloseModal] = useModal(false)
 
-  const handleOpenModal = (cardPayload) => {
-    setOpenModal(true)
-    setPayload(cardPayload)
+  const [notifications, setNotifications, loading, error] = useFetchNotifications()
+
+  const [deleteNotification] = useDeleteNotification()
+
+  const handleDelete = (id) => {
+    deleteNotification({ variables: { input: { spaceId: process.env.REACT_APP_SPACE_ID, notificationId: id } } })
+    setNotifications(notifications.filter((notification) => notification.node.id !== id))
   }
-
-  const handleCloseModal = () => {
-    setOpenModal(false)
-    setPayload(undefined)
-  }
-
-  // GraphQL Query hook to automatically fetch data
-  const { data, loading, error } = useQuery(GET_NOTIFICATIONS_QUERY, {
-    variables: { spaceId: process.env.REACT_APP_SPACE_ID, in: ['TOKNOW', 'TODO'] },
-  })
 
   // Content is not ready, show error/loader
   if (loading) return <h1 className="notification-header">Loading notifications...</h1>
@@ -63,9 +39,14 @@ export default function Notifications() {
 
   return (
     <div>
-      <Modal open={openModal} payload={payload} handleClose={handleCloseModal} />
-      {data.me.space.notifications.edges?.map((edge, idx) => (
-        <Notification key={idx} showCardHandler={handleOpenModal} {...edge} />
+      <Modal open={isOpen} payload={payload} handleClose={handleCloseModal} />
+      {notifications.map((edge, idx) => (
+        <Notification
+          key={edge}
+          node={edge.node}
+          onActionShowCardHandler={handleOpenModal}
+          onDeleteHandler={handleDelete}
+        />
       ))}
     </div>
   )

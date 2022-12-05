@@ -17,7 +17,7 @@
   max-width: 400px;
 }
 
-button.ac-pushButton, button.ac-pushButton-disabled {
+button.ac-pushButton, button.ac-pushButton-disabled, button.deleteButton {
   cursor: pointer;
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
     "Helvetica Neue", Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji",
@@ -45,6 +45,16 @@ button.ac-pushButton-disabled {
 
 button.ac-pushButton:is(:hover) {
   background-color: rgba(74, 59, 238, 0.102);
+}
+
+button.deleteButton {
+  border: none;
+  font-size: large;
+  color: rgb(74, 59, 238, 0.2)
+}
+button.deleteButton:is(:hover) {
+  background-color: rgba(74, 59, 238, 0.102);
+  color: rgb(74, 59, 238, 0.5)
 }
 
 /* Adaptive Card Element styles */
