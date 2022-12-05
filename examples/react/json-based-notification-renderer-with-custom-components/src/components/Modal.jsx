@@ -8,6 +8,7 @@ import CloseIcon from '@mui/icons-material/Close'
 import { AdaptiveCardUsingHostConfigContext } from 'adaptivecards-react'
 
 const BasicModal = ({ open, handleClose, payload }) => {
+  if (!payload) return <div></div>
   return (
     <Modal
       style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}
