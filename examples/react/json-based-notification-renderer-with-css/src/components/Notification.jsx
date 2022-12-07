@@ -32,6 +32,7 @@ export default function Notification({ node, onDeleteHandler, onActionHandler })
       handleCloseModal()
     }
   }
+
   if (!node.view) return <div></div>
 
   return (

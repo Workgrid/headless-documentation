@@ -16,24 +16,26 @@
 
 import React from 'react'
 import Notification from './Notification'
-import Modal from './Modal'
 import Box from '@mui/material/Box'
 import LinearProgress from '@mui/material/LinearProgress'
 import { TransitionGroup } from 'react-transition-group'
 import Grow from '@mui/material/Grow'
 import useFetchNotifications from './hooks/useFetchNotifications'
 import useDeleteNotification from './hooks/useDeleteNotification'
-import useModal from './hooks/useModal'
+import useActionNotification from './hooks/useActionNotification'
 
 export default function Notifications() {
-  const [payload, isOpen, handleOpenModal, handleCloseModal] = useModal(false)
-
   const [notifications, setNotifications, loading, error] = useFetchNotifications()
 
   const [deleteNotification] = useDeleteNotification()
+  const [actionNotification] = useActionNotification()
 
   const handleDelete = (id) => {
     deleteNotification({ variables: { input: { spaceId: process.env.REACT_APP_SPACE_ID, notificationId: id } } })
+    setNotifications(notifications.filter((notification) => notification.node.id !== id))
+  }
+  const handleAction = (id, data) => {
+    actionNotification({ variables: { input: { spaceId: process.env.REACT_APP_SPACE_ID, notificationId: id, data } } })
     setNotifications(notifications.filter((notification) => notification.node.id !== id))
   }
 
@@ -49,7 +51,6 @@ export default function Notifications() {
 
   return (
     <div>
-      <Modal open={isOpen} payload={payload} handleClose={handleCloseModal} />
       <TransitionGroup>
         {notifications.map((edge, idx) => (
           <Grow
@@ -62,7 +63,7 @@ export default function Notifications() {
             }}
           >
             <Box sx={{ maxWidth: 400 }}>
-              <Notification node={edge.node} onActionShowCardHandler={handleOpenModal} onDeleteHandler={handleDelete} />
+              <Notification node={edge.node} onDeleteHandler={handleDelete} onActionHandler={handleAction} />
             </Box>
           </Grow>
         ))}

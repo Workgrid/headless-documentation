@@ -15,24 +15,33 @@
  */
 
 import React from 'react'
+import Modal from './Modal'
+import useModal from './hooks/useModal'
 import Card from '@mui/material/Card'
 import CardContent from '@mui/material/CardContent'
 import IconButton from '@mui/material/IconButton'
 import DeleteIcon from '@mui/icons-material/Delete'
 import { AdaptiveCardUsingHostConfigContext } from 'adaptivecards-react'
 
-export default function Notification({ node, onActionShowCardHandler, onDeleteHandler }) {
+export default function Notification({ node, onDeleteHandler, onActionHandler }) {
+  const [payload, isOpen, handleOpenModal, handleCloseModal] = useModal(false)
+
   const handleOnExecuteAction = (e) => {
     if (e._propertyBag.type === 'Action.ShowCard') {
       const card = JSON.parse(JSON.stringify(e.card))
-      onActionShowCardHandler(card)
+      handleOpenModal(card)
+    } else if (e._propertyBag.type === 'Action.Submit') {
+      onActionHandler(node.id, e.data)
+      handleCloseModal()
     }
   }
 
   if (!node.view) return <div></div>
+
   return (
     <Card sx={{ maxWidth: '400px', margin: '15px' }}>
       <CardContent>
+        <Modal open={isOpen} payload={payload} handleClose={handleCloseModal} onExecuteAction={handleOnExecuteAction} />
         <AdaptiveCardUsingHostConfigContext payload={node.view} onExecuteAction={handleOnExecuteAction} />
         {node.isDeletable ? (
           <div style={{ display: 'flex', justifyContent: 'right' }}>
