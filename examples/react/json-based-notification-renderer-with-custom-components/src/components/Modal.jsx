@@ -5,10 +5,8 @@ import IconButton from '@mui/material/IconButton'
 import Slide from '@mui/material/Slide'
 import Backdrop from '@mui/material/Backdrop'
 import CloseIcon from '@mui/icons-material/Close'
-import { AdaptiveCardUsingHostConfigContext } from 'adaptivecards-react'
 
-const BasicModal = ({ open, handleClose, payload, onExecuteAction }) => {
-  if (!payload) return <div></div>
+const BasicModal = ({ open, handleClose, children }) => {
   return (
     <Modal
       style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}
@@ -41,7 +39,7 @@ const BasicModal = ({ open, handleClose, payload, onExecuteAction }) => {
               <CloseIcon />
             </IconButton>
           </div>
-          <AdaptiveCardUsingHostConfigContext payload={payload} onExecuteAction={onExecuteAction} />
+          {children}
         </Box>
       </Slide>
     </Modal>

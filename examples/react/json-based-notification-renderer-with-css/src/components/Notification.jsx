@@ -44,7 +44,9 @@ export default function Notification({ node, onDeleteHandler, onActionHandler })
         padding: '10px',
       }}
     >
-      <Modal open={isOpen} payload={payload} handleClose={handleCloseModal} onExecuteAction={handleOnExecuteAction} />
+      <Modal open={isOpen} handleClose={handleCloseModal}>
+        {payload && <AdaptiveCardUsingHostConfigContext payload={payload} onExecuteAction={handleOnExecuteAction} />}
+      </Modal>
       <AdaptiveCardUsingHostConfigContext payload={node.view} onExecuteAction={handleOnExecuteAction} />
       {node.isDeletable ? (
         <div style={{ display: 'flex', justifyContent: 'right' }}>
