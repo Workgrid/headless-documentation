@@ -19,6 +19,7 @@ import React from 'react'
 import ReactDOM from 'react-dom'
 import { ApolloProvider, ApolloClient, createHttpLink, InMemoryCache } from '@apollo/client'
 import { setContext } from '@apollo/client/link/context'
+import { relayStylePagination } from '@apollo/client/utilities'
 
 import './styles.css'
 
@@ -27,12 +28,18 @@ import App from './App'
 // Import environment variables
 dotenv.config()
 
-const cache = new InMemoryCache()
+const cache = new InMemoryCache({
+  typePolicies: {
+    Space: {
+      fields: {
+        notifications: relayStylePagination(),
+      },
+    },
+  },
+})
 
 // Set up Auth link to add authorization header
-const httpLink = createHttpLink({
-  uri: process.env.REACT_APP_GRAPHQL_URI,
-})
+const httpLink = createHttpLink({ uri: process.env.REACT_APP_GRAPHQL_URI })
 
 const authLink = setContext((_, { headers }) => {
   return {

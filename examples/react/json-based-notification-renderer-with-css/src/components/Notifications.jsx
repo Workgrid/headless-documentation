@@ -16,34 +16,72 @@
 
 import React from 'react'
 import Notification from './Notification'
+import InfiniteScroll from 'react-infinite-scroll-component'
 import useFetchNotifications from './hooks/useFetchNotifications'
 import useDeleteNotification from './hooks/useDeleteNotification'
 import useActionNotification from './hooks/useActionNotification'
 
 export default function Notifications() {
-  const [notifications, setNotifications, loading, error] = useFetchNotifications()
-
+  const [todos, setTodos, loadingTodos, errorTodos, pageInfoTodos, fetchMoreTodos] = useFetchNotifications({
+    location: 'TODO',
+  })
+  const [toknows, setToknows, loadingToknows, errorToknows, pageInfoToknows, fetchMoreToknows] = useFetchNotifications({
+    location: 'TOKNOW',
+  })
   const [deleteNotification] = useDeleteNotification()
   const [actionNotification] = useActionNotification()
 
+  const updateNotificationState = (id) => {
+    setTodos(todos.filter((todo) => todo.node.id !== id))
+    setToknows(toknows.filter((toknow) => toknow.node.id !== id))
+  }
   const handleDelete = (id) => {
     deleteNotification({ variables: { input: { spaceId: process.env.REACT_APP_SPACE_ID, notificationId: id } } })
-    setNotifications(notifications.filter((notification) => notification.node.id !== id))
+    updateNotificationState(id)
   }
   const handleAction = (id, data) => {
     actionNotification({ variables: { input: { spaceId: process.env.REACT_APP_SPACE_ID, notificationId: id, data } } })
-    setNotifications(notifications.filter((notification) => notification.node.id !== id))
+    updateNotificationState(id)
   }
+
+  const fetchMoreNotifications = () => {
+    fetchMoreTodos({
+      variables: {
+        cursor: pageInfoTodos.endCursor,
+      },
+    })
+    fetchMoreToknows({
+      variables: {
+        cursor: pageInfoToknows.endCursor,
+      },
+    })
+  }
+
+  // Merge the notification types together
+  const notifications = [...toknows, ...todos]
+  const loading = loadingTodos || loadingToknows
+  const error = errorTodos || errorToknows
+  const hasNextPage = pageInfoTodos?.hasNextPage || pageInfoToknows?.hasNextPage
 
   // Content is not ready, show error/loader
   if (loading) return <h1 className="notification-header">Loading notifications...</h1>
   if (error) return <pre>{error.message}</pre>
 
   return (
-    <div>
+    <InfiniteScroll
+      dataLength={notifications.length}
+      next={() => fetchMoreNotifications()}
+      hasMore={hasNextPage}
+      loader={<h4>Loading more notifications...</h4>}
+      endMessage={
+        <p style={{ textAlign: 'center' }}>
+          <b>That's all!</b>
+        </p>
+      }
+    >
       {notifications.map((edge, idx) => (
         <Notification key={idx} node={edge.node} onDeleteHandler={handleDelete} onActionHandler={handleAction} />
       ))}
-    </div>
+    </InfiniteScroll>
   )
 }

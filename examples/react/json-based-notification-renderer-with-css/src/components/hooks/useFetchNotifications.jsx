@@ -3,17 +3,21 @@ import { useQuery, gql } from '@apollo/client'
 
 // GraphQL Query for list of notifications
 const GET_NOTIFICATIONS_QUERY = gql`
-  query GetNotifications($spaceId: ID!, $in: [NotificationLocation!]!) {
+  query GetNotifications($spaceId: ID!, $cursor: String, $input: NotificationsInput!) {
     me {
       space(spaceId: $spaceId) {
-        notifications(in: $in) {
+        notifications(first: 10, after: $cursor, input: $input) {
           edges {
             node {
               id
-              isDeletable
               view
+              isDeletable
               location
             }
+          }
+          pageInfo {
+            hasNextPage
+            endCursor
           }
         }
       }
@@ -21,18 +25,32 @@ const GET_NOTIFICATIONS_QUERY = gql`
   }
 `
 
-export default function useFetchNotifications() {
+export default function useFetchNotifications({ location }) {
   const [notifications, setNotifications] = useState([])
+  const [pageInfo, setPageInfo] = useState(null)
 
-  const { data, loading, error } = useQuery(GET_NOTIFICATIONS_QUERY, {
-    variables: { spaceId: process.env.REACT_APP_SPACE_ID, in: ['TOKNOW', 'TODO'] },
+  const { data, loading, error, fetchMore } = useQuery(GET_NOTIFICATIONS_QUERY, {
+    variables: {
+      spaceId: process.env.REACT_APP_SPACE_ID,
+      input: {
+        location,
+        filter: {
+          orderBy: 'DATE',
+        },
+      },
+    },
   })
 
-  const notificationEdges = data?.me?.space?.notifications?.edges
+  const edges = data?.me?.space?.notifications?.edges
+  const notificationsPageInfo = data?.me?.space?.notifications?.pageInfo
 
   useEffect(() => {
-    notificationEdges && setNotifications(notificationEdges)
-  }, [notificationEdges])
+    edges && setNotifications(edges)
+  }, [edges])
 
-  return [notifications, setNotifications, loading, error]
+  useEffect(() => {
+    notificationsPageInfo && setPageInfo(notificationsPageInfo)
+  }, [notificationsPageInfo])
+
+  return [notifications, setNotifications, loading, error, pageInfo, fetchMore]
 }
