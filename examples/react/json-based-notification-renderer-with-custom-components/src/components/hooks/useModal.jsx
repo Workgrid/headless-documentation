@@ -11,7 +11,6 @@ export default function useModal() {
 
   const handleCloseModal = () => {
     setIsOpen(false)
-    setPayload(undefined)
   }
   return [payload, isOpen, handleOpenModal, handleCloseModal]
 }
