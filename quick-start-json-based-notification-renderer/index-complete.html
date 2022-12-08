@@ -32,6 +32,20 @@
         max-width: 400px;
       }
 
+      .btn.delete {
+        border: none;
+        background-color: inherit;
+        padding: 14px 28px;
+        font-size: 16px;
+        cursor: pointer;
+        float: right;
+      }
+
+      /* On mouse-over */
+      .btn.delete:hover {
+        background: #eee;
+      }
+
       .modal-container {
         display: none; /* Hidden by default */
         position: fixed; /* Stay in place */
@@ -131,24 +145,34 @@
       if (notifications?.length) {
         output.innerHTML = "";
         output.append(h("h1", "Workgrid Notifications"));
-        notifications.forEach((notification) => {
-          renderNotification(notification);
-        });
+        for (const notification of notifications) {
+          const res = await renderNotification(notification);
+          output.append(res);
+        }
       } else {
         output.append(h("h1", "No notifications"));
       }
 
       async function renderNotification({ node }) {
-        const container = h("div.notification-container");
-        output.append(container);
+        const container = h("div.notification-container", {
+          id: node.id,
+        });
 
-        let adaptiveCard = createAdaptiveCardInstance();
+        let adaptiveCard = createAdaptiveCardInstance(node.id);
         adaptiveCard.parse(node.view);
         // Render the card to an HTML element and append to DOM
         container.append(adaptiveCard.render());
+
+        if (node.isDeletable) {
+          container.append(
+            h("button.btn.delete", { onclick: deleteHandler }, "Delete")
+          );
+        }
+
+        return container;
       }
 
-      function createAdaptiveCardInstance() {
+      function createAdaptiveCardInstance(notificationId) {
         // Create an AdaptiveCard instance
         let adaptiveCard = new AdaptiveCards.AdaptiveCard();
         // Host Config defines the style and behavior of a card
@@ -156,7 +180,7 @@
           fontFamily: "Segoe UI, Helvetica Neue, sans-serif",
           actions: {
             maxActions: 6,
-            actionsOrientation: "horizontal",
+            actionsOrientation: "vertical",
             actionAlignment: "left",
             showCard: {
               //actionMode: "inline",
@@ -180,43 +204,117 @@
             modalContainer.style.display = "block";
           } else if (action._propertyBag.type === "Action.OpenUrl") {
             modalContainer.style.display = "none";
-            window.open(action.url, "_blank");
+            window.open(action.url);
           } else {
-            console.log(action);
             // Hide the Modal
             modalContainer.style.display = "none";
-            if (action.data) console.log(`Outputting data`, action.data);
+            if (action.data) {
+              await submitActionHandler(notificationId, action.data);
+            }
           }
         };
 
         return adaptiveCard;
       }
 
+      async function submitActionHandler(notificationId, data) {
+        document.getElementById(notificationId).innerHTML = "...Actioning";
+        const res = await actionNotification(notificationId, data);
+        if (!res.actionNotification) {
+          throw new Error("Request was unsuccessful");
+        }
+
+        removeNotificationCallback(notificationId);
+      }
+
+      async function deleteHandler(e) {
+        e.preventDefault();
+        const notificationId = e.target.parentElement.id;
+        document.getElementById(notificationId).innerHTML = "...Deleting";
+        const res = await deleteNotification(notificationId);
+        if (!res.deleteNotification) {
+          throw new Error("Request was unsuccessful");
+        }
+        removeNotificationCallback(notificationId);
+      }
+
+      function removeNotificationCallback(notificationId) {
+        document.getElementById(notificationId).remove();
+        notifications = notifications.filter(
+          (notification) => notification.id !== notificationId
+        );
+      }
+
       async function retrieveNotifications() {
         const query = `
-        query notifications($spaceId: ID!, $in: [NotificationLocation!]!) {
-          me{
-            space(spaceId: $spaceId) {
-              notifications(in: $in) {
-                edges {
-                  node {
-                    id,
-                    view,
-                    location
+              query notifications($spaceId: ID!, $input: NotificationsInput!) {
+                me{
+                  space(spaceId: $spaceId) {
+                    notifications(first: 5, input: $input) {
+                      edges {
+                        node {
+                          id,
+                          isDeletable,
+                          view,
+                          location
+                        }
+                      },
+                      pageInfo {
+                        hasNextPage,
+                        endCursor
+                      }
+                    }
                   }
                 }
-              }
-            }
-          }
-        }`;
+              }`;
 
-        // Query for both Todo and Toknow notifications
+        // Query for notifications
         const { data } = await fetchWorkgridData(query, {
           spaceId: WORKGRID_SPACE_ID,
-          in: ["TOKNOW", "TODO"],
+          input: {
+            location: "TOKNOW",
+            filter: {
+              orderBy: "DATE",
+            },
+          },
         });
 
         return data.me.space.notifications.edges;
+      }
+
+      async function deleteNotification(notificationId) {
+        const mutation = `
+                  mutation deleteNotification($input: DeleteNotificationInput!) {
+                    deleteNotification(input: $input)
+                  }
+              `;
+
+        const { data } = await fetchWorkgridData(mutation, {
+          input: {
+            notificationId,
+            spaceId: WORKGRID_SPACE_ID,
+          },
+        });
+
+        return data;
+      }
+
+      async function actionNotification(notificationId, data) {
+        const mutation = `
+                mutation actionNotification($input: ActionNotificationInput!) {
+                  actionNotification(input: $input)
+                }
+              `;
+
+        const response = await fetchWorkgridData(mutation, {
+          input: {
+            notificationId,
+            spaceId: WORKGRID_SPACE_ID,
+            data,
+          },
+        });
+
+        return response.data;
       }
 
       async function fetchWorkgridData(query, variables) {
