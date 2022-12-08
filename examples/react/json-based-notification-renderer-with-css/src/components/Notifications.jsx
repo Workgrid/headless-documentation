@@ -17,51 +17,23 @@
 import React from 'react'
 import Notification from './Notification'
 import InfiniteScroll from 'react-infinite-scroll-component'
-import useFetchNotifications from './hooks/useFetchNotifications'
+import useNotifications from './hooks/useNotifications'
 import useDeleteNotification from './hooks/useDeleteNotification'
 import useActionNotification from './hooks/useActionNotification'
 
 export default function Notifications() {
-  const [todos, setTodos, loadingTodos, errorTodos, pageInfoTodos, fetchMoreTodos] = useFetchNotifications({
-    location: 'TODO',
-  })
-  const [toknows, setToknows, loadingToknows, errorToknows, pageInfoToknows, fetchMoreToknows] = useFetchNotifications({
-    location: 'TOKNOW',
-  })
+  const [notifications, loading, error, hasNextPage, removeNodeById, fetchMoreNotifications] = useNotifications()
   const [deleteNotification] = useDeleteNotification()
   const [actionNotification] = useActionNotification()
 
-  const updateNotificationState = (id) => {
-    setTodos(todos.filter((todo) => todo.node.id !== id))
-    setToknows(toknows.filter((toknow) => toknow.node.id !== id))
-  }
   const handleDelete = (id) => {
     deleteNotification({ variables: { input: { spaceId: process.env.REACT_APP_SPACE_ID, notificationId: id } } })
-    updateNotificationState(id)
+    removeNodeById(id)
   }
   const handleAction = (id, data) => {
     actionNotification({ variables: { input: { spaceId: process.env.REACT_APP_SPACE_ID, notificationId: id, data } } })
-    updateNotificationState(id)
+    removeNodeById(id)
   }
-
-  const fetchMoreNotifications = () => {
-    fetchMoreTodos({
-      variables: {
-        cursor: pageInfoTodos.endCursor,
-      },
-    })
-    fetchMoreToknows({
-      variables: {
-        cursor: pageInfoToknows.endCursor,
-      },
-    })
-  }
-
-  // Merge the notification types together
-  const notifications = [...toknows, ...todos]
-  const loading = loadingTodos || loadingToknows
-  const error = errorTodos || errorToknows
-  const hasNextPage = pageInfoTodos?.hasNextPage || pageInfoToknows?.hasNextPage
 
   // Content is not ready, show error/loader
   if (loading) return <h1 className="notification-header">Loading notifications...</h1>
