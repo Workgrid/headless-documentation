@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import React from 'react'
+import React, { useEffect } from 'react'
 import Notification from './Notification'
 import InfiniteScroll from 'react-infinite-scroll-component'
 import useNotifications from './hooks/useNotifications'
@@ -22,17 +22,26 @@ import useDeleteNotification from './hooks/useDeleteNotification'
 import useActionNotification from './hooks/useActionNotification'
 
 export default function Notifications() {
-  const [notifications, loading, error, hasNextPage, removeNodeById, fetchMoreNotifications] = useNotifications()
+  const [notifications, loading, error, hasNextPage, fetchMoreNotifications] = useNotifications()
   const [deleteNotification] = useDeleteNotification()
   const [actionNotification] = useActionNotification()
 
   const handleDelete = (id) => {
-    deleteNotification({ variables: { input: { spaceId: process.env.REACT_APP_SPACE_ID, notificationId: id } } })
-    removeNodeById(id)
+    deleteNotification({
+      variables: {
+        input: { spaceId: process.env.REACT_APP_SPACE_ID, notificationId: id },
+      },
+      optimisticResponse: {
+        deleteNotification: {
+          __typename: 'Notification',
+          id,
+        },
+      },
+    })
   }
+
   const handleAction = (id, data) => {
     actionNotification({ variables: { input: { spaceId: process.env.REACT_APP_SPACE_ID, notificationId: id, data } } })
-    removeNodeById(id)
   }
 
   // Content is not ready, show error/loader
@@ -42,7 +51,7 @@ export default function Notifications() {
   return (
     <InfiniteScroll
       dataLength={notifications.length}
-      next={() => fetchMoreNotifications()}
+      next={fetchMoreNotifications}
       hasMore={hasNextPage}
       loader={<h4>Loading more notifications...</h4>}
       endMessage={

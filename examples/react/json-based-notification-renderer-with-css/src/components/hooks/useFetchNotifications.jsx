@@ -1,9 +1,10 @@
 import { useQuery, gql } from '@apollo/client'
 
 // GraphQL Query for list of notifications
-const GET_NOTIFICATIONS_QUERY = gql`
+export const GET_NOTIFICATIONS_QUERY = gql`
   query GetNotifications($spaceId: ID!, $cursor: String, $input: NotificationsInput!) {
     me {
+      id
       space(spaceId: $spaceId) {
         notifications(first: 6, after: $cursor, input: $input) {
           edges {
@@ -24,7 +25,7 @@ const GET_NOTIFICATIONS_QUERY = gql`
   }
 `
 
-export default function useFetchNotifications({ location }) {
+export default function useFetchNotifications({ location = 'TOKNOW' }) {
   const { data, loading, error, fetchMore } = useQuery(GET_NOTIFICATIONS_QUERY, {
     variables: {
       spaceId: process.env.REACT_APP_SPACE_ID,
