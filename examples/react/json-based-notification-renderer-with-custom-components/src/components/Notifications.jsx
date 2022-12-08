@@ -20,23 +20,35 @@ import Box from '@mui/material/Box'
 import LinearProgress from '@mui/material/LinearProgress'
 import { TransitionGroup } from 'react-transition-group'
 import Grow from '@mui/material/Grow'
-import useFetchNotifications from './hooks/useFetchNotifications'
+import InfiniteScroll from 'react-infinite-scroll-component'
+import useNotifications from './hooks/useNotifications'
 import useDeleteNotification from './hooks/useDeleteNotification'
 import useActionNotification from './hooks/useActionNotification'
 
 export default function Notifications() {
-  const [notifications, setNotifications, loading, error] = useFetchNotifications()
-
+  const [notifications, loading, error, hasNextPage, fetchMoreNotifications] = useNotifications()
   const [deleteNotification] = useDeleteNotification()
   const [actionNotification] = useActionNotification()
 
   const handleDelete = (id) => {
-    deleteNotification({ variables: { input: { spaceId: process.env.REACT_APP_SPACE_ID, notificationId: id } } })
-    setNotifications(notifications.filter((notification) => notification.node.id !== id))
+    deleteNotification({
+      variables: {
+        input: { spaceId: process.env.REACT_APP_SPACE_ID, notificationId: id },
+      },
+      optimisticResponse: {
+        deleteNotification: {
+          __typename: 'Notification',
+          id,
+          view: null,
+          isDeletable: null,
+          location: null,
+        },
+      },
+    })
   }
+
   const handleAction = (id, data) => {
     actionNotification({ variables: { input: { spaceId: process.env.REACT_APP_SPACE_ID, notificationId: id, data } } })
-    setNotifications(notifications.filter((notification) => notification.node.id !== id))
   }
 
   if (loading) {
@@ -50,7 +62,17 @@ export default function Notifications() {
   if (error) return <pre>{error.message}</pre>
 
   return (
-    <div>
+    <InfiniteScroll
+      dataLength={notifications.length}
+      next={fetchMoreNotifications}
+      hasMore={hasNextPage}
+      loader={<h4>Loading more notifications...</h4>}
+      endMessage={
+        <p style={{ textAlign: 'center' }}>
+          <b>That's all!</b>
+        </p>
+      }
+    >
       <TransitionGroup>
         {notifications.map((edge, idx) => (
           <Grow
@@ -68,6 +90,6 @@ export default function Notifications() {
           </Grow>
         ))}
       </TransitionGroup>
-    </div>
+    </InfiniteScroll>
   )
 }

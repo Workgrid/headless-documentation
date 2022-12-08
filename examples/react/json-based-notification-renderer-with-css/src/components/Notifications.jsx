@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import React, { useEffect } from 'react'
+import React from 'react'
 import Notification from './Notification'
 import InfiniteScroll from 'react-infinite-scroll-component'
 import useNotifications from './hooks/useNotifications'
@@ -35,6 +35,9 @@ export default function Notifications() {
         deleteNotification: {
           __typename: 'Notification',
           id,
+          view: null,
+          isDeletable: null,
+          location: null,
         },
       },
     })

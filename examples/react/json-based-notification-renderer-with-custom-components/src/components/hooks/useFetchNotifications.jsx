@@ -1,19 +1,23 @@
-import { useEffect, useState } from 'react'
 import { useQuery, gql } from '@apollo/client'
 
 // GraphQL Query for list of notifications
-const GET_NOTIFICATIONS_QUERY = gql`
-  query GetNotifications($spaceId: ID!, $in: [NotificationLocation!]!) {
+export const GET_NOTIFICATIONS_QUERY = gql`
+  query GetNotifications($spaceId: ID!, $cursor: String, $input: NotificationsInput!) {
     me {
+      id
       space(spaceId: $spaceId) {
-        notifications(in: $in) {
+        notifications(first: 6, after: $cursor, input: $input) {
           edges {
             node {
               id
-              isDeletable
               view
+              isDeletable
               location
             }
+          }
+          pageInfo {
+            hasNextPage
+            endCursor
           }
         }
       }
@@ -21,18 +25,18 @@ const GET_NOTIFICATIONS_QUERY = gql`
   }
 `
 
-export default function useFetchNotifications() {
-  const [notifications, setNotifications] = useState([])
-
-  const { data, loading, error } = useQuery(GET_NOTIFICATIONS_QUERY, {
-    variables: { spaceId: process.env.REACT_APP_SPACE_ID, in: ['TOKNOW', 'TODO'] },
+export default function useFetchNotifications({ location = 'TOKNOW' }) {
+  const { data, loading, error, fetchMore } = useQuery(GET_NOTIFICATIONS_QUERY, {
+    variables: {
+      spaceId: process.env.REACT_APP_SPACE_ID,
+      input: {
+        location,
+        filter: {
+          orderBy: 'DATE',
+        },
+      },
+    },
   })
 
-  const notificationEdges = data?.me?.space?.notifications?.edges
-
-  useEffect(() => {
-    notificationEdges && setNotifications(notificationEdges)
-  }, [notificationEdges])
-
-  return [notifications, setNotifications, loading, error]
+  return [data?.me?.space?.notifications || [], loading, error, fetchMore]
 }

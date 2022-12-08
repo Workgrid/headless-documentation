@@ -22,6 +22,7 @@ import { setContext } from '@apollo/client/link/context'
 import hostConfig from './hostConfig'
 import { ProvidesHostConfigContext } from 'adaptivecards-react'
 import App from './App'
+import { relayStylePagination } from '@apollo/client/utilities'
 
 import { ThemeProvider } from '@mui/material/styles'
 import theme from './theme'
@@ -29,7 +30,16 @@ import theme from './theme'
 // import environment variables
 dotenv.config()
 
-const cache = new InMemoryCache()
+const cache = new InMemoryCache({
+  typePolicies: {
+    Space: {
+      fields: {
+        notifications: relayStylePagination(),
+      },
+    },
+  },
+})
+
 // Set up Auth link to add authorization header
 const httpLink = createHttpLink({
   uri: process.env.REACT_APP_GRAPHQL_URI,
