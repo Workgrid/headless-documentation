@@ -4,12 +4,7 @@ import { useApolloClient } from '@apollo/client'
 
 const DELETE_NOTIFICATION_MUTATION = gql`
   mutation DeleteNotification($input: DeleteNotificationInput!) {
-    deleteNotification(input: $input) {
-      id
-      view
-      isDeletable
-      location
-    }
+    deleteNotification(input: $input)
   }
 `
 
@@ -34,8 +29,10 @@ export default function useDeleteNotification() {
       // Query the cache directly to get existing notifications
       const cachedData = cache.readQuery(queryOptions)
 
+      console.log('mutationResult: ', mutationResult)
+
       // Grab id of notification that was deleted
-      const deletedId = mutationResult?.data?.deleteNotification?.id
+      const deletedId = mutationResult?.data?.deleteNotification
 
       // Re-write the cache without the deleted notification
       const data = {
