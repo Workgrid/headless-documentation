@@ -38,5 +38,14 @@ export default function useFetchNotifications({ location = 'TODO' } = {}) {
     },
   })
 
-  return [data?.me?.space?.notifications || [], loading, error, fetchMore]
+  const notifications = data?.me?.space?.notifications
+  const hasNextPage = data?.me?.space?.notifications?.pageInfo?.hasNextPage
+
+  const fetchMoreNotifications = () => {
+    if (notifications?.pageInfo?.hasNextPage) {
+      fetchMore({ variables: { cursor: notifications.pageInfo.endCursor } })
+    }
+  }
+
+  return [notifications?.edges || [], loading, error, hasNextPage, fetchMoreNotifications]
 }

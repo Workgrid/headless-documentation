@@ -25,7 +25,7 @@ export const GET_NOTIFICATIONS_QUERY = gql`
   }
 `
 
-export default function useFetchNotifications({ location = 'TOKNOW' }) {
+export default function useFetchNotifications({ location = 'TODO' } = {}) {
   const { data, loading, error, fetchMore } = useQuery(GET_NOTIFICATIONS_QUERY, {
     variables: {
       spaceId: process.env.REACT_APP_SPACE_ID,
@@ -38,5 +38,14 @@ export default function useFetchNotifications({ location = 'TOKNOW' }) {
     },
   })
 
-  return [data?.me?.space?.notifications || [], loading, error, fetchMore]
+  const notifications = data?.me?.space?.notifications
+  const hasNextPage = data?.me?.space?.notifications?.pageInfo?.hasNextPage
+
+  const fetchMoreNotifications = () => {
+    if (notifications?.pageInfo?.hasNextPage) {
+      fetchMore({ variables: { cursor: notifications.pageInfo.endCursor } })
+    }
+  }
+
+  return [notifications?.edges || [], loading, error, hasNextPage, fetchMoreNotifications]
 }

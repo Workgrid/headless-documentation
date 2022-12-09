@@ -21,13 +21,12 @@ import LinearProgress from '@mui/material/LinearProgress'
 import { TransitionGroup } from 'react-transition-group'
 import Grow from '@mui/material/Grow'
 import InfiniteScroll from 'react-infinite-scroll-component'
-import useNotifications from './hooks/useNotifications'
+import useFetchNotifications from './hooks/useFetchNotifications'
 import useDeleteNotification from './hooks/useDeleteNotification'
 import useActionNotification from './hooks/useActionNotification'
 
 export default function Notifications() {
-  // Hooks to handle GraphQL queries
-  const [notifications, loading, error, hasNextPage, fetchMoreNotifications] = useNotifications()
+  const [notifications, loading, error, hasNextPage, fetchMore] = useFetchNotifications()
   const [deleteNotification] = useDeleteNotification()
   const [actionNotification] = useActionNotification()
 
@@ -67,7 +66,7 @@ export default function Notifications() {
   return (
     <InfiniteScroll
       dataLength={notifications.length}
-      next={fetchMoreNotifications}
+      next={fetchMore}
       hasMore={hasNextPage}
       loader={<h4>Loading more notifications...</h4>}
       endMessage={
