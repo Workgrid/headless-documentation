@@ -1,0 +1,376 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>Workgrid Notifications</title>
+
+    <script src="https://unpkg.com/markdown-it@8.4.0/dist/markdown-it.min.js"></script>
+    <script src="https://unpkg.com/adaptivecards/dist/adaptivecards.min.js"></script>
+
+    <style>
+      .notification-global-container {
+        display: flex;
+        flex-direction: column;
+      }
+
+      .notification-container {
+        font-weight: 400;
+        font-size: 1rem;
+        line-height: 1.5;
+        background-color: #fff;
+        color: rgba(0, 0, 0, 0.87);
+        transition: box-shadow 300ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+        border-radius: 4px;
+        box-shadow: 0px 3px 3px -2px rgba(0, 0, 0, 0.2),
+          0px 3px 4px 0px rgba(0, 0, 0, 0.14),
+          0px 1px 8px 0px rgba(0, 0, 0, 0.12);
+        padding: 5px;
+        margin-top: 20px;
+        width: 100%;
+        max-width: 400px;
+      }
+
+      .notification-container:hover .btn.delete {
+        display: block;
+      }
+
+      .btn.delete {
+        display: none;
+        float: right;
+        padding: 8px;
+        border-radius: 16px;
+        cursor: pointer;
+        background-color: white;
+        color: red;
+        border: 1px solid darkblue;
+      }
+
+      /* On mouse-over */
+      .btn.delete:hover {
+        background-color: red;
+        color: white;
+      }
+
+      .modal-container {
+        display: none; /* Hidden by default */
+        position: fixed; /* Stay in place */
+        z-index: 1; /* Sit on top */
+        left: 0;
+        top: 0;
+        width: 100%; /* Full width */
+        height: 100%; /* Full height */
+        overflow: auto; /* Enable scroll if needed */
+        background-color: rgb(0, 0, 0); /* Fallback color */
+        background-color: rgba(0, 0, 0, 0.4); /* Black w/ opacity */
+      }
+
+      /* Modal Content/Box */
+      .modal {
+        background-color: #fefefe;
+        margin: 15% auto; /* 15% from the top and centered */
+        padding: 20px;
+        width: 50%; /* Could be more or less, depending on screen size */
+      }
+
+      /* The Close Button */
+      .close {
+        color: #aaaaaa;
+        float: right;
+        font-size: 28px;
+        font-weight: bold;
+      }
+
+      .close:hover,
+      .close:focus {
+        color: #000;
+        text-decoration: none;
+        cursor: pointer;
+      }
+
+      /* Adaptive Card Element styles */
+      .ac-textInput,
+      .ac-multichoiceInput,
+      .ac-dateInput,
+      .ac-timeInput,
+      .ac-numberInput {
+        padding: 10px 4% 10px 10px;
+        color: rgb(112, 112, 112);
+        border-style: solid;
+        border-width: 1px;
+        border-radius: 6px;
+        border-color: black;
+        cursor: pointer;
+      }
+      .ac-dateInput {
+        padding: 10px 10px 8px 10px;
+      }
+      .ac-pushButton {
+        display: block;
+        padding: 8px;
+        border-radius: 16px;
+        cursor: pointer;
+      }
+      .ac-pushButton.style-default {
+        background-color: white;
+        color: darkblue;
+        border: 1px solid darkblue;
+      }
+      .ac-pushButton.style-positive {
+        border: 1px solid darkblue;
+        background-color: darkblue;
+        color: white;
+      }
+    </style>
+  </head>
+
+  <body>
+    <div id="output" class="notification-global-container"></div>
+    <!-- The Modal container -->
+    <div id="modalContainer" class="modal-container">
+      <!-- Modal -->
+      <div class="modal">
+        <span class="close">&times;</span>
+        <!-- Modal content -->
+        <div class="modal-content"></div>
+      </div>
+    </div>
+    <script type="module">
+      // Configuration
+      // ================================================================
+      const WORKGRID_COMPANY_CODE = "<company-code>";
+      const WORKGRID_SPACE_ID = "<space-id>";
+      const WORKGRID_USER_TOKEN = "<user-token>";
+      // Libraries
+      // ================================================================
+
+      import h from "https://cdn.skypack.dev/hyperscript";
+
+      // Output
+      // ================================================================
+
+      const output = document.querySelector("#output");
+      output.append(h("p", "Loading notifications..."));
+
+      // Get the modal container
+      const modalContainer = document.querySelector("#modalContainer");
+
+      // Get the <span> element that closes the modal
+      const span = document.getElementsByClassName("close")[0];
+
+      // When the user clicks on <span> (x), close the modal
+      span.onclick = function () {
+        modalContainer.style.display = "none";
+      };
+
+      let notifications = await retrieveNotifications();
+      if (notifications?.length) {
+        output.innerHTML = "";
+        output.append(h("h1", "Workgrid Notifications"));
+        for (const notification of notifications) {
+          const res = await renderNotification(notification);
+          output.append(res);
+        }
+      } else {
+        output.append(h("h1", "No notifications"));
+      }
+
+      async function renderNotification({ node }) {
+        const container = h("div.notification-container", {
+          id: node.id,
+        });
+
+        let adaptiveCard = createAdaptiveCardInstance(node.id);
+        adaptiveCard.parse(node.view);
+        // Render the card to an HTML element and append to DOM
+        container.append(adaptiveCard.render());
+
+        if (node.isDeletable) {
+          container.append(
+            h("button.btn.delete", { onclick: deleteHandler }, "Delete")
+          );
+        }
+
+        return container;
+      }
+
+      function createAdaptiveCardInstance(notificationId) {
+        // Create an AdaptiveCard instance
+        let adaptiveCard = new AdaptiveCards.AdaptiveCard();
+        // Host Config defines the style and behavior of a card
+        adaptiveCard.hostConfig = new AdaptiveCards.HostConfig({
+          fontFamily: "Segoe UI, Helvetica Neue, sans-serif",
+          actions: {
+            maxActions: 6,
+            actionsOrientation: "horizontal",
+            actionAlignment: "left",
+            showCard: {
+              //actionMode: "inline",
+              actionMode: "popup",
+              inlineTopMargin: 20,
+            },
+          },
+        });
+
+        // Set the adaptive card's event handlers. onExecuteAction is invoked
+        // whenever an action is clicked in the card
+        adaptiveCard.onExecuteAction = async function (action) {
+          // Action.type is returning undefined. For now use direct path
+          if (action._propertyBag.type === "Action.ShowCard") {
+            const modalContent =
+              document.getElementsByClassName("modal-content")[0];
+            // Render the card, associated to the action, to an HTML element and append to DOM
+            modalContent.innerHTML = "";
+            modalContent.append(action.card.render());
+            // Display the Modal
+            modalContainer.style.display = "block";
+          } else if (action._propertyBag.type === "Action.OpenUrl") {
+            modalContainer.style.display = "none";
+            window.open(action.url);
+          } else {
+            // Hide the Modal
+            modalContainer.style.display = "none";
+            if (action.data) {
+              await submitActionHandler(notificationId, action.data);
+            }
+          }
+        };
+
+        return adaptiveCard;
+      }
+
+      async function submitActionHandler(notificationId, data) {
+        document.getElementById(notificationId).innerHTML = "...Actioning";
+        const res = await actionNotification(notificationId, data);
+        if (!res.actionNotification) {
+          throw new Error("Request was unsuccessful");
+        }
+
+        removeNotificationCallback(notificationId);
+      }
+
+      async function deleteHandler(e) {
+        e.preventDefault();
+        const notificationId = e.target.parentElement.id;
+        document.getElementById(notificationId).innerHTML = "...Deleting";
+        const res = await deleteNotification(notificationId);
+        if (!res.deleteNotification) {
+          throw new Error("Request was unsuccessful");
+        }
+        removeNotificationCallback(notificationId);
+      }
+
+      function removeNotificationCallback(notificationId) {
+        document.getElementById(notificationId).remove();
+        notifications = notifications.filter(
+          (notification) => notification.id !== notificationId
+        );
+      }
+
+      async function retrieveNotifications() {
+        const query = `
+              query notifications($spaceId: ID!, $input: NotificationsInput!) {
+                me{
+                  space(spaceId: $spaceId) {
+                    notifications(first: 5, input: $input) {
+                      edges {
+                        node {
+                          id,
+                          isDeletable,
+                          view,
+                          location
+                        }
+                      },
+                      pageInfo {
+                        hasNextPage,
+                        endCursor
+                      }
+                    }
+                  }
+                }
+              }`;
+
+        // Query for notifications
+        const { data } = await fetchWorkgridData(query, {
+          spaceId: WORKGRID_SPACE_ID,
+          input: {
+            location: "TOKNOW",
+            filter: {
+              orderBy: "DATE",
+            },
+          },
+        });
+
+        return data.me.space.notifications.edges;
+      }
+
+      async function deleteNotification(notificationId) {
+        const mutation = `
+                  mutation deleteNotification($input: DeleteNotificationInput!) {
+                    deleteNotification(input: $input)
+                  }
+              `;
+
+        const { data } = await fetchWorkgridData(mutation, {
+          input: {
+            notificationId,
+            spaceId: WORKGRID_SPACE_ID,
+          },
+        });
+
+        return data;
+      }
+
+      async function actionNotification(notificationId, data) {
+        const mutation = `
+                mutation actionNotification($input: ActionNotificationInput!) {
+                  actionNotification(input: $input)
+                }
+              `;
+
+        const response = await fetchWorkgridData(mutation, {
+          input: {
+            notificationId,
+            spaceId: WORKGRID_SPACE_ID,
+            data,
+          },
+        });
+
+        return response.data;
+      }
+
+      async function fetchWorkgridData(query, variables) {
+        try {
+          const response = await fetch(
+            `https://${WORKGRID_COMPANY_CODE}.workgrid.com/graphql`,
+            {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+                Accept: "application/json",
+                Authorization: `Bearer ${WORKGRID_USER_TOKEN}`,
+              },
+              body: JSON.stringify({
+                query,
+                variables,
+              }),
+            }
+          );
+
+          if (!response.ok) {
+            throw new Error("Request was unsuccessful");
+          }
+
+          const resp = await response.json();
+          return resp;
+        } catch (error) {
+          console.error(error);
+          output.innerHTML = ``;
+          output.append(h("h1", "Error getting notifications"));
+          output.append(h("pre", error.stack));
+        }
+      }
+    </script>
+  </body>
+</html>
