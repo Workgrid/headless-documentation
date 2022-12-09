@@ -12,7 +12,6 @@ const DELETE_NOTIFICATION_MUTATION = gql`
 export default function useDeleteNotification() {
   const client = useApolloClient()
   const [deleteNotificationFunction, { loading, error }] = useMutation(DELETE_NOTIFICATION_MUTATION, {
-    // Fired on optimistic response, and on actual response
     update(cache, mutationResult) {
       deleteNotificationFromCache(cache, mutationResult)
     },

@@ -32,15 +32,6 @@ export default function Notifications() {
       variables: {
         input: { spaceId: process.env.REACT_APP_SPACE_ID, notificationId: id },
       },
-      optimisticResponse: {
-        deleteNotification: {
-          __typename: 'Notification',
-          id,
-          view: null,
-          isDeletable: null,
-          location: null,
-        },
-      },
     })
   }
 

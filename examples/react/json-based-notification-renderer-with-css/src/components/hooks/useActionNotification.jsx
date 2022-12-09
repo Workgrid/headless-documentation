@@ -12,7 +12,6 @@ const ACTION_NOTIFICATION_MUTATION = gql`
 export default function useActionNotification() {
   const client = useApolloClient()
   const [actionNotificationFunction, { loading, error }] = useMutation(ACTION_NOTIFICATION_MUTATION, {
-    // Fired on optimistic response, and on actual response
     update(cache, mutationResult) {
       deleteNotificationFromCache(cache, mutationResult)
     },
