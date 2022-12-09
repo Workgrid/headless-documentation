@@ -32,18 +32,25 @@
         max-width: 400px;
       }
 
+      .notification-container:hover .btn.delete {
+        display: block;
+      }
+
       .btn.delete {
-        border: none;
-        background-color: inherit;
-        padding: 14px 28px;
-        font-size: 16px;
-        cursor: pointer;
+        display: none;
         float: right;
+        padding: 8px;
+        border-radius: 16px;
+        cursor: pointer;
+        background-color: white;
+        color: red;
+        border: 1px solid darkblue;
       }
 
       /* On mouse-over */
       .btn.delete:hover {
-        background: #eee;
+        background-color: red;
+        color: white;
       }
 
       .modal-container {
@@ -98,6 +105,22 @@
       }
       .ac-dateInput {
         padding: 10px 10px 8px 10px;
+      }
+      .ac-pushButton {
+        display: block;
+        padding: 8px;
+        border-radius: 16px;
+        cursor: pointer;
+      }
+      .ac-pushButton.style-default {
+        background-color: white;
+        color: darkblue;
+        border: 1px solid darkblue;
+      }
+      .ac-pushButton.style-positive {
+        border: 1px solid darkblue;
+        background-color: darkblue;
+        color: white;
       }
     </style>
   </head>
