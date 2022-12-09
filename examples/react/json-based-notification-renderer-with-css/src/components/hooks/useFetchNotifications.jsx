@@ -25,7 +25,7 @@ export const GET_NOTIFICATIONS_QUERY = gql`
   }
 `
 
-export default function useFetchNotifications({ location = 'TOKNOW' }) {
+export default function useFetchNotifications({ location = 'TODO' } = {}) {
   const { data, loading, error, fetchMore } = useQuery(GET_NOTIFICATIONS_QUERY, {
     variables: {
       spaceId: process.env.REACT_APP_SPACE_ID,

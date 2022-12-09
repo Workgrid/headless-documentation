@@ -1,7 +1,7 @@
 import useFetchNotifications from './useFetchNotifications'
 
 export default function useNotifications() {
-  const [toknows, loading, error, fetchMore] = useFetchNotifications({ location: 'TOKNOW' })
+  const [toknows, loading, error, fetchMore] = useFetchNotifications()
 
   const fetchMoreNotifications = () => {
     if (toknows?.pageInfo?.hasNextPage) {
