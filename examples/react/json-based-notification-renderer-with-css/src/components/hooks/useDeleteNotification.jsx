@@ -2,6 +2,7 @@ import { useMutation, gql } from '@apollo/client'
 import { GET_NOTIFICATIONS_QUERY } from './useFetchNotifications'
 import { useApolloClient } from '@apollo/client'
 
+// GraphQL Mutation to delete a notification
 const DELETE_NOTIFICATION_MUTATION = gql`
   mutation DeleteNotification($input: DeleteNotificationInput!) {
     deleteNotification(input: $input)

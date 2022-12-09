@@ -1,16 +1,18 @@
 import useFetchNotifications from './useFetchNotifications'
 
 export default function useNotifications() {
-  const [toknows, loading, error, fetchMore] = useFetchNotifications()
+  // Fetch notifications from the TODO location
+  const [todos, loading, error, fetchMore] = useFetchNotifications({ location: 'TODO' })
 
+  // Fetch the next page of notifications and merge with the existing page
   const fetchMoreNotifications = () => {
-    if (toknows?.pageInfo?.hasNextPage) {
-      fetchMore({ variables: { cursor: toknows.pageInfo.endCursor } })
+    if (todos?.pageInfo?.hasNextPage) {
+      fetchMore({ variables: { cursor: todos.pageInfo.endCursor } })
     }
   }
 
-  const notifications = toknows?.edges || []
-  const hasNextPage = toknows?.pageInfo?.hasNextPage
+  const notifications = todos?.edges || []
+  const hasNextPage = todos?.pageInfo?.hasNextPage
 
   return [notifications, loading, error, hasNextPage, fetchMoreNotifications]
 }

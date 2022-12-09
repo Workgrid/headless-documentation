@@ -26,10 +26,12 @@ import useDeleteNotification from './hooks/useDeleteNotification'
 import useActionNotification from './hooks/useActionNotification'
 
 export default function Notifications() {
+  // Hooks to handle GraphQL queries
   const [notifications, loading, error, hasNextPage, fetchMoreNotifications] = useNotifications()
   const [deleteNotification] = useDeleteNotification()
   const [actionNotification] = useActionNotification()
 
+  // Handle a delete action
   const handleDelete = (id) => {
     deleteNotification({
       variables: {
@@ -47,10 +49,12 @@ export default function Notifications() {
     })
   }
 
+  // Handle a submit action
   const handleAction = (id, data) => {
     actionNotification({ variables: { input: { spaceId: process.env.REACT_APP_SPACE_ID, notificationId: id, data } } })
   }
 
+  // Content is not ready, show error/loader
   if (loading) {
     return (
       <Box>
@@ -58,7 +62,6 @@ export default function Notifications() {
       </Box>
     )
   }
-
   if (error) return <pre>{error.message}</pre>
 
   return (

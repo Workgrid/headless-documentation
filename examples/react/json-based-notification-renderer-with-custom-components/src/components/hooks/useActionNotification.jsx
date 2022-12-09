@@ -2,6 +2,7 @@ import { useMutation, gql } from '@apollo/client'
 import { GET_NOTIFICATIONS_QUERY } from './useFetchNotifications'
 import { useApolloClient } from '@apollo/client'
 
+// GraphQL Mutation to action on a notification
 const ACTION_NOTIFICATION_MUTATION = gql`
   mutation actionNotification($input: ActionNotificationInput!) {
     actionNotification(input: $input)

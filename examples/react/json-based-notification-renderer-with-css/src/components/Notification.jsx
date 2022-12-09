@@ -23,6 +23,7 @@ import { AdaptiveCardUsingHostConfigContext } from 'adaptivecards-react'
 export default function Notification({ node, onDeleteHandler, onActionHandler }) {
   const [payload, isOpen, handleOpenModal, handleCloseModal] = useModal(false)
 
+  // Handler for any actions being triggered
   const handleOnExecuteAction = (e) => {
     if (e._propertyBag.type === 'Action.ShowCard') {
       const card = JSON.parse(JSON.stringify(e.card))
@@ -33,6 +34,7 @@ export default function Notification({ node, onDeleteHandler, onActionHandler })
     }
   }
 
+  // Render nothing if there is no payload
   if (!node.view) return <div></div>
 
   return (
