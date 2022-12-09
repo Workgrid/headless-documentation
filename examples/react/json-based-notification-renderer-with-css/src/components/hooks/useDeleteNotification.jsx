@@ -30,8 +30,6 @@ export default function useDeleteNotification() {
       // Query the cache directly to get existing notifications
       const cachedData = cache.readQuery(queryOptions)
 
-      console.log('mutationResult: ', mutationResult)
-
       // Grab id of notification that was deleted
       const deletedId = mutationResult?.data?.deleteNotification
 
