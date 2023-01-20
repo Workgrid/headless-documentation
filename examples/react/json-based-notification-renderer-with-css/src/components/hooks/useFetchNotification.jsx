@@ -14,18 +14,23 @@
  * limitations under the License.
  */
 
-import { useState } from 'react'
+import { useLazyQuery, gql } from '@apollo/client'
 
-export default function useModal() {
-  const [isOpen, setIsOpen] = useState(false)
-
-  const handleOpenModal = () => {
-    setIsOpen(true)
+export const GET_NOTIFICATION = gql`
+  query GetNotificationDynamicDetail($spaceId: ID!, $id: ID!) {
+    me {
+      space(spaceId: $spaceId) {
+        notification(id: $id) {
+          dynamicDetailView
+        }
+      }
+    }
   }
+`
 
-  const handleCloseModal = () => {
-    setIsOpen(false)
-  }
+export default function useFetchNotification() {
+  const [getNotification, { loading, data }] = useLazyQuery(GET_NOTIFICATION)
 
-  return [isOpen, handleOpenModal, handleCloseModal]
+  const card = data?.me?.space?.notification?.dynamicDetailView?.card
+  return [getNotification, loading, card]
 }
