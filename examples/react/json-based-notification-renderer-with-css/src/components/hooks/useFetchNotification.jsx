@@ -17,7 +17,7 @@
 import { useLazyQuery, gql } from '@apollo/client'
 
 export const GET_NOTIFICATION = gql`
-  query notification($spaceId: ID!, $id: ID!) {
+  query GetNotificationDynamicDetail($spaceId: ID!, $id: ID!) {
     me {
       space(spaceId: $spaceId) {
         notification(id: $id) {
