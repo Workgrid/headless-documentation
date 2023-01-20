@@ -14,24 +14,51 @@
  * limitations under the License.
  */
 
-import * as React from 'react'
+import { useState, useEffect } from 'react'
+import { AdaptiveCardUsingHostConfigContext } from 'adaptivecards-react'
 import Modal from './Modal'
 import useModal from './hooks/useModal'
-
-import { AdaptiveCardUsingHostConfigContext } from 'adaptivecards-react'
+import useFetchNotification from './hooks/useFetchNotification'
 
 export default function Notification({ node, onDeleteHandler, onActionHandler }) {
-  const [payload, isOpen, handleOpenModal, handleCloseModal] = useModal(false)
+  const [isOpen, handleOpenModal, handleCloseModal] = useModal(false)
+  const [payload, setPayload] = useState(undefined)
+  const [getNotification, loading, card] = useFetchNotification()
+
+  useEffect(() => {
+    if (!loading && card) {
+      const payload = JSON.parse(JSON.stringify(card))
+      setPayload(payload)
+    }
+  }, [loading, card])
 
   // Handler for any actions being triggered
   const handleOnExecuteAction = (e) => {
     if (e._propertyBag.type === 'Action.ShowCard') {
-      const card = JSON.parse(JSON.stringify(e.card))
-      handleOpenModal(card)
+      const payload = JSON.parse(JSON.stringify(e.card))
+      setPayload(payload)
+      handleOpenModal()
     } else if (e._propertyBag.type === 'Action.Submit') {
       onActionHandler(node.id, e.data)
       handleCloseModal()
+    } else if (e._propertyBag.type === 'Action.Execute') {
+      onExecuteHandler(node.id)
+      handleOpenModal()
     }
+  }
+
+  const onExecuteHandler = (id) => {
+    getNotification({
+      variables: {
+        spaceId: process.env.REACT_APP_SPACE_ID,
+        id,
+      },
+    })
+  }
+
+  const onCloseHandler = () => {
+    handleCloseModal()
+    setPayload(undefined)
   }
 
   // Render nothing if there is no payload
@@ -46,7 +73,7 @@ export default function Notification({ node, onDeleteHandler, onActionHandler })
         padding: '10px',
       }}
     >
-      <Modal open={isOpen} handleClose={handleCloseModal}>
+      <Modal open={isOpen} handleClose={onCloseHandler}>
         {payload && <AdaptiveCardUsingHostConfigContext payload={payload} onExecuteAction={handleOnExecuteAction} />}
       </Modal>
       <AdaptiveCardUsingHostConfigContext payload={node.view} onExecuteAction={handleOnExecuteAction} />
