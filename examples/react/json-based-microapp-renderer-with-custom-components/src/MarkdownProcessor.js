@@ -18,31 +18,22 @@ import React from 'react'
 import Link from '@mui/material/Link'
 import NotSoSimpleMarkdown from 'simple-markdown'
 
-var UNESCAPE_URL_R = /\\([^0-9A-Za-z\s])/g
-/**
- * @param {string} rawUrlString
- * @returns {string}
- */
-var unescapeUrl = function (rawUrlString /* : string */) {
-  return rawUrlString.replace(UNESCAPE_URL_R, '$1')
-}
-
 // Setup NotSoSimpleMarkdown
 // Here's a whitelistof things we accept in our markdown string
 const markdownRules = {
   br: {
     ...NotSoSimpleMarkdown.defaultRules.br,
     match: NotSoSimpleMarkdown.anyScopeRegex(/^\n\n/),
-    parse: function () {
+    parse: () => {
       return {}
     },
-    react: function (node, output, state) {
+    react: (node, output, state) => {
       return NotSoSimpleMarkdown.reactElement('br', state.key, {})
     },
   },
   link: {
     ...NotSoSimpleMarkdown.defaultRules.link,
-    parse: function (capture, parse, state) {
+    parse: (capture, parse, state) => {
       return {
         content: parse(capture[1], state),
         target: unescapeUrl(capture[2]),
@@ -50,7 +41,7 @@ const markdownRules = {
         variant: state.variant,
       }
     },
-    react: function (node, output, state) {
+    react: (node, output, state) => {
       // Instead of rendering an <a> tag, a MUI component is rendered
       return (
         <Link
@@ -82,6 +73,15 @@ const parse = (source, variant) => {
   return rawBuiltParser(source, { inline: true, variant: variant || '' })
 }
 const reactOutput = NotSoSimpleMarkdown.reactFor(NotSoSimpleMarkdown.ruleOutput(markdownRules, 'react'))
+
+/**
+ * @param {string} rawUrlString
+ * @returns {string}
+ */
+const UNESCAPE_URL_R = /\\([^0-9A-Za-z\s])/g
+const unescapeUrl = (rawUrlString /* : string */) => {
+  return rawUrlString.replace(UNESCAPE_URL_R, '$1')
+}
 
 export default function processMarkdown(text, variant = null) {
   // Shortcut for empty text
