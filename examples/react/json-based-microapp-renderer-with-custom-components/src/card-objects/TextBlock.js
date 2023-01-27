@@ -16,6 +16,7 @@
 
 import * as React from 'react'
 import * as AC from 'adaptivecards'
+import MarkdownParser from '../MarkdownProcessor'
 import { reactDomRender } from './shared'
 import Typography from '@mui/material/Typography'
 
@@ -38,6 +39,11 @@ export class TextBlock extends AC.TextBlock {
   }
 
   renderElement = (props) => {
-    return <Typography variant={props.variant}>{this.text}</Typography>
+    // To support inline markup, Adaptive Cards support a subset of the Commonmark Markdown syntax.
+    // https://learn.microsoft.com/en-us/adaptive-cards/authoring-cards/text-features
+    // We use simple-markdown to render MUI elements for markdown content instead of plain HTML
+    const renderedMarkdown = MarkdownParser(this.text, props.variant)
+
+    return <Typography variant={props.variant}>{renderedMarkdown}</Typography>
   }
 }

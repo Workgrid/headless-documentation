@@ -51,7 +51,7 @@ const Microapp = ({ node }) => {
       setQueryVariables({
         spaceId: process.env.REACT_APP_SPACE_ID,
         endpoint: data.endpoint,
-        data: data.data ? omit(data.data, 'endpoint') : undefined,
+        data: data ? omit(data, 'endpoint') : undefined,
       })
     }
   }
