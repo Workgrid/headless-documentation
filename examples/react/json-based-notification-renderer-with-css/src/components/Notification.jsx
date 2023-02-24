@@ -38,12 +38,15 @@ export default function Notification({ node, onDeleteHandler, onActionHandler })
       const payload = JSON.parse(JSON.stringify(e.card))
       setPayload(payload)
       handleOpenModal()
-    } else if (e._propertyBag.type === 'Action.Submit') {
-      onActionHandler(node.id, e.data)
-      handleCloseModal()
     } else if (e._propertyBag.type === 'Action.Execute') {
-      onExecuteHandler(node.id)
-      handleOpenModal()
+      // Check the verb associated to the action
+      if (e.verb === 'dynamicDetail') {
+        onExecuteHandler(node.id)
+        handleOpenModal()
+      } else {
+        onActionHandler(node.id, e.data)
+        handleCloseModal()
+      }
     }
   }
 

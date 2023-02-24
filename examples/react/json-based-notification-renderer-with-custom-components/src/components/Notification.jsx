@@ -31,7 +31,7 @@ export default function Notification({ node, onDeleteHandler, onActionHandler })
     if (e._propertyBag.type === 'Action.ShowCard') {
       const card = JSON.parse(JSON.stringify(e.card))
       handleOpenModal(card)
-    } else if (e._propertyBag.type === 'Action.Submit') {
+    } else if (e._propertyBag.type === 'Action.Execute') {
       onActionHandler(node.id, e.data)
       handleCloseModal()
     }
